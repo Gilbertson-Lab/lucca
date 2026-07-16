@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Lucca 2027</title>
+<link rel="icon" href="data:," />
+<style>
+:root{
+  --paper:#E9EDE4; --card:#F8F9F5; --ink:#182019; --ink2:#59665B;
+  --line:#C9D2C4; --line2:#DDE3D8;
+  --cypress:#2F5E43; --brass:#9A7529; --wine:#7B2D45; --slate:#3C5A6E;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
+  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;-webkit-font-smoothing:antialiased;}
+button{font:inherit;cursor:pointer;}
+a{color:var(--cypress);}
+.lw-shell{max-width:1180px;margin:0 auto;padding:20px 18px 80px;}
+
+.lw-top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:12px;}
+.lw-mast{font-family:var(--serif);font-size:34px;line-height:1;letter-spacing:-.01em;margin:0;font-weight:400;}
+.lw-sub{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);margin-top:6px;}
+.lw-count{margin-left:auto;text-align:right;font-family:var(--mono);font-size:11px;color:var(--ink2);letter-spacing:.08em;text-transform:uppercase;}
+.lw-count b{display:block;font-family:var(--serif);font-size:28px;color:var(--cypress);letter-spacing:normal;text-transform:none;font-weight:400;}
+
+.lw-tabs{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 18px;}
+.lw-tab{background:none;border:0;padding:8px 14px;border-radius:2px;color:var(--ink2);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;}
+.lw-tab:hover{color:var(--ink);background:var(--line2);}
+.lw-tab[aria-selected="true"]{background:var(--ink);color:var(--paper);}
+.lw-tab:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:2px solid var(--cypress);outline-offset:2px;}
+
+.lw-bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px;}
+.lw-btn{background:var(--ink);color:var(--paper);border:0;padding:7px 13px;border-radius:2px;font-size:13px;}
+.lw-btn:hover{background:var(--cypress);}
+.lw-btn:disabled{opacity:.4;cursor:not-allowed;}
+.lw-btn.ghost{background:none;color:var(--ink2);border:1px solid var(--line);}
+.lw-btn.ghost:hover{background:var(--card);color:var(--ink);}
+.lw-btn.danger{background:none;color:var(--wine);border:1px solid var(--wine);}
+.lw-btn.danger:hover{background:var(--wine);color:var(--paper);}
+.lw-field{padding:6px 9px;border:1px solid var(--line);border-radius:2px;background:var(--card);color:var(--ink);font-size:13px;font-family:inherit;}
+.lw-search{min-width:190px;flex:1;max-width:280px;}
+
+.lw-week{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:2px;overflow:hidden;}
+.lw-day{background:var(--card);min-height:210px;display:flex;flex-direction:column;}
+.lw-day.wed{background:#F1F5EC;}
+.lw-dayhead{display:flex;align-items:baseline;gap:6px;padding:8px 9px 6px;border-bottom:1px solid var(--line2);}
+.lw-daybtn{background:none;border:0;padding:0;display:flex;align-items:baseline;gap:6px;color:inherit;}
+.lw-daybtn:hover .lw-dnum{color:var(--cypress);}
+.lw-dow{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);}
+.lw-dnum{font-family:var(--serif);font-size:22px;line-height:1;}
+.lw-add{margin-left:auto;background:none;border:0;color:var(--ink2);font-size:16px;line-height:1;padding:0 2px;}
+.lw-add:hover{color:var(--cypress);}
+.lw-daybody{padding:7px;display:flex;flex-direction:column;gap:5px;flex:1;}
+
+.lw-rail{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--ink2);background:none;border:0;padding:1px 0;text-align:left;width:100%;}
+.lw-rail:hover{color:var(--cypress);}
+.lw-rail .bar{height:4px;border-radius:2px;background:var(--slate);flex:none;opacity:.55;width:10px;}
+.lw-rail.m .bar{border-radius:0;}
+.lw-rail.s .bar{border-radius:2px 0 0 2px;}
+.lw-rail.e .bar{border-radius:0 2px 2px 0;}
+.lw-rail .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.lw-rail.m .lbl,.lw-rail.e .lbl{opacity:.5;}
+
+.lw-ev{text-align:left;width:100%;background:var(--paper);border:1px solid var(--line2);border-left:3px solid var(--ink2);border-radius:2px;padding:5px 6px;}
+.lw-ev:hover{border-color:var(--cypress);}
+.lw-ev .t{font-family:var(--mono);font-size:10px;color:var(--ink2);letter-spacing:.05em;}
+.lw-ev .n{font-size:12.5px;line-height:1.3;}
+.lw-ev .w{font-size:11px;color:var(--ink2);}
+.lw-ev .meta{display:flex;gap:7px;margin-top:3px;font-family:var(--mono);font-size:10px;color:var(--ink2);}
+.lw-ev.Ceremony{border-left-color:var(--wine);}
+.lw-ev.Meal{border-left-color:var(--brass);}
+.lw-ev.Travel{border-left-color:var(--slate);}
+.lw-ev.Activity{border-left-color:var(--cypress);}
+
+.lw-chip{width:100%;text-align:left;border-radius:2px;padding:4px 6px;font-size:11.5px;line-height:1.3;background:none;}
+.lw-chip.money{border:1px solid var(--wine);color:var(--wine);}
+.lw-chip.idea{border:1px dashed var(--brass);color:var(--brass);}
+.lw-chip:hover{background:var(--paper);}
+
+.lw-tide{border-top:1px solid var(--line2);padding:6px 8px 8px;font-size:11px;line-height:1.5;}
+.lw-tide .row{display:flex;gap:5px;align-items:flex-start;background:none;border:0;padding:0;width:100%;text-align:left;color:inherit;}
+.lw-tide .g{font-family:var(--mono);font-size:11px;width:14px;flex:none;text-align:center;}
+.lw-tide .in{color:var(--cypress);}
+.lw-tide .out{color:var(--wine);}
+.lw-tide .here{color:var(--ink2);font-family:var(--mono);letter-spacing:.06em;}
+
+.lw-tablewrap{border:1px solid var(--line);border-radius:2px;overflow-x:auto;background:var(--card);}
+.lw-table{width:100%;border-collapse:collapse;font-size:13px;}
+.lw-table th{text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);font-weight:400;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;}
+.lw-table td{padding:9px 10px;border-bottom:1px solid var(--line2);vertical-align:top;}
+.lw-table tr:last-child td{border-bottom:0;}
+.lw-table tbody tr:hover{background:#F1F4EC;}
+.lw-table td.num,.lw-table th.num{text-align:right;font-family:var(--mono);}
+.lw-table td.mono{font-family:var(--mono);font-size:12px;color:var(--ink2);white-space:nowrap;}
+.lw-name{font-weight:500;}
+.lw-note{color:var(--ink2);font-size:12px;margin-top:2px;max-width:340px;}
+
+.lw-pill{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:2px 7px;border-radius:10px;border:1px solid currentColor;white-space:nowrap;}
+.p-green{color:var(--cypress);} .p-brass{color:var(--brass);} .p-wine{color:var(--wine);} .p-grey{color:var(--ink2);}
+
+.lw-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px;}
+.lw-card{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:12px 14px;}
+.lw-card .k{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);}
+.lw-card .v{font-family:var(--serif);font-size:26px;margin-top:4px;}
+.lw-cat{margin-bottom:9px;}
+.lw-cat .r{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;}
+.lw-cat .r span:last-child{font-family:var(--mono);}
+.lw-track{height:6px;background:var(--line2);border-radius:3px;overflow:hidden;}
+.lw-fill{height:100%;background:var(--cypress);}
+
+.lw-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
+.lw-col h3{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);font-weight:400;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line);}
+.lw-idea{width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:2px;padding:10px;margin-bottom:8px;}
+.lw-idea:hover{border-color:var(--cypress);}
+.lw-idea .c{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);}
+.lw-idea .t{font-size:14px;margin-top:2px;}
+.lw-idea .p{font-size:12px;color:var(--ink2);margin-top:5px;line-height:1.4;}
+
+.lw-scrim{position:fixed;inset:0;background:rgba(24,32,25,.45);display:flex;align-items:flex-start;justify-content:center;padding:24px 14px;overflow-y:auto;z-index:50;}
+.lw-modal{background:var(--paper);border:1px solid var(--ink);border-radius:2px;width:100%;max-width:520px;padding:20px;}
+.lw-modal h2{font-family:var(--serif);font-size:22px;margin:0 0 14px;font-weight:400;}
+.lw-modal h2 small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-top:4px;}
+.lw-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.lw-lab{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink2);margin-bottom:3px;}
+.lw-in{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:2px;background:var(--card);color:var(--ink);font-size:13px;font-family:inherit;}
+.lw-in:focus{border-color:var(--cypress);}
+textarea.lw-in{min-height:62px;resize:vertical;}
+.lw-wide{grid-column:1/-1;}
+.lw-acts{display:flex;gap:8px;margin-top:18px;align-items:center;flex-wrap:wrap;}
+.lw-picker{border:1px solid var(--line);border-radius:2px;background:var(--card);max-height:132px;overflow-y:auto;padding:4px;}
+.lw-pick{display:flex;gap:8px;align-items:center;padding:4px 5px;font-size:13px;border-radius:2px;cursor:pointer;}
+.lw-pick:hover{background:var(--line2);}
+.lw-pick input{accent-color:var(--cypress);}
+.lw-pick .sub{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--ink2);}
+
+.lw-links{grid-column:1/-1;border-top:1px solid var(--line);padding-top:12px;margin-top:4px;}
+.lw-links .h{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-bottom:6px;}
+.lw-link{background:none;border:1px solid var(--line);border-radius:2px;padding:4px 8px;font-size:12px;margin:0 5px 5px 0;color:var(--ink);}
+.lw-link:hover{border-color:var(--cypress);color:var(--cypress);}
+
+.lw-sheet h4{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);font-weight:400;margin:14px 0 6px;}
+.lw-sheet h4:first-child{margin-top:0;}
+.lw-row{display:flex;gap:8px;align-items:baseline;width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line2);padding:6px 2px;color:inherit;}
+.lw-row:hover{background:var(--card);}
+.lw-row .a{font-family:var(--mono);font-size:11px;color:var(--ink2);flex:none;min-width:44px;}
+.lw-row .b{flex:1;font-size:13px;}
+.lw-row .c{font-family:var(--mono);font-size:11px;color:var(--ink2);}
+
+.lw-empty{padding:34px 16px;text-align:center;color:var(--ink2);border:1px dashed var(--line);border-radius:2px;background:var(--card);}
+.lw-empty p{margin:0 0 12px;}
+.lw-status{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);}
+.lw-foot{margin-top:26px;padding-top:12px;border-top:1px solid var(--line);font-size:11.5px;color:var(--ink2);line-height:1.6;}
+.lw-mode{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;padding:2px 7px;border-radius:10px;border:1px solid var(--line);color:var(--ink2);}
+.lw-mode.live{color:var(--cypress);border-color:var(--cypress);}
+
+/* to do */
+.lw-task{display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1px solid var(--line);
+  border-radius:2px;padding:9px 10px;margin-bottom:6px;}
+.lw-task.over{border-color:var(--cypress);border-style:dashed;background:#F1F5EC;}
+.lw-task.dragging{opacity:.35;}
+.lw-task.done{background:none;border-style:dotted;}
+.lw-grip{cursor:grab;color:var(--line);font-size:13px;line-height:1.3;user-select:none;flex:none;letter-spacing:-2px;}
+.lw-grip:active{cursor:grabbing;}
+.lw-rank{font-family:var(--mono);font-size:11px;color:var(--ink2);flex:none;min-width:16px;padding-top:1px;}
+.lw-check{accent-color:var(--cypress);width:16px;height:16px;flex:none;margin-top:1px;cursor:pointer;}
+.lw-taskbody{flex:1;min-width:0;}
+.lw-tasktitle{font-size:13.5px;line-height:1.35;text-align:left;background:none;border:0;padding:0;color:inherit;}
+.lw-tasktitle:hover{color:var(--cypress);}
+.lw-task.done .lw-tasktitle{text-decoration:line-through;color:var(--ink2);}
+.lw-taskmeta{display:flex;gap:8px;flex-wrap:wrap;margin-top:3px;font-family:var(--mono);font-size:10px;
+  letter-spacing:.06em;color:var(--ink2);text-transform:uppercase;}
+.lw-taskmeta .late{color:var(--wine);}
+.lw-nudge{display:flex;flex-direction:column;gap:1px;flex:none;}
+.lw-nudge button{background:none;border:0;color:var(--line);font-size:9px;line-height:1;padding:1px 3px;}
+.lw-nudge button:hover:not(:disabled){color:var(--cypress);}
+.lw-nudge button:disabled{opacity:.3;cursor:default;}
+.lw-who{display:flex;gap:8px;align-items:center;background:var(--card);border:1px solid var(--brass);
+  border-radius:2px;padding:9px 12px;margin-bottom:12px;font-size:13px;}
+.lw-owner{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;
+  padding:1px 6px;border-radius:9px;border:1px solid currentColor;}
+.o-pat{color:var(--slate);} .o-claire{color:var(--brass);} .o-both{color:var(--cypress);}
+.lw-chip.task{border:1px solid var(--slate);color:var(--slate);}
+
+.lw-gate{max-width:380px;margin:14vh auto;padding:26px;background:var(--card);border:1px solid var(--line);border-radius:2px;}
+.lw-gate h1{font-family:var(--serif);font-size:28px;margin:0 0 4px;font-weight:400;}
+.lw-gate p{color:var(--ink2);font-size:13px;line-height:1.6;}
+
+@media (max-width:720px){
+  .lw-week{grid-template-columns:1fr !important;}
+  .lw-day{min-height:0;}
+  .lw-grid{grid-template-columns:1fr;}
+  .lw-mast{font-size:26px;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important;}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+<script src="https://unpkg.com/@babel/standalone@7/babel.min.js" crossorigin></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script type="text/babel" data-type="module">
+const { useState, useEffect, useMemo, useCallback, useRef } = React;
+
+/* ==================================================================
+   CONFIG  --  the only part you need to touch
+   Leave both blank: the planner saves to this browser only.
+   Fill both in: you and Claire share one live copy.
+   See STEPS.md.
+   ================================================================== */
+const CONFIG = {
+  // Your Project ID, nothing else. Found in Project Settings > General.
+  // The full URL gets built from it below.
+  PROJECT_ID: "qqflkaqnnzmtzixmayjs",
+
+  // Project Settings > API Keys > "Publishable key". Starts with sb_publishable_
+  // Safe to have here in public. It is not a password.
+  // NEVER put a Secret key (sb_secret_) in this file.
+  PUBLISHABLE_KEY: "sb_publishable_TUUQgfA6duv7IGxQNANwHw_b47YCtcI",
+};
+
+const CLOUD = Boolean(CONFIG.PROJECT_ID && CONFIG.PUBLISHABLE_KEY);
+const SUPABASE_URL = `https://${CONFIG.PROJECT_ID}.supabase.co`;
+const sb = CLOUD ? window.supabase.createClient(SUPABASE_URL, CONFIG.PUBLISHABLE_KEY) : null;
+
+if (CONFIG.PUBLISHABLE_KEY.startsWith("sb_secret_")) {
+  document.body.innerHTML = "<p style='padding:40px;font-family:sans-serif;color:#7B2D45'>"
+    + "That is a Secret key. It bypasses all your security rules and must never go in a web page. "
+    + "Use the Publishable key instead, the one starting sb_publishable_.</p>";
+  throw new Error("secret key in client");
+}
+
+/* ------------------------------------------------------------------
+   storage adapter: same two calls either way
+   ------------------------------------------------------------------ */
+const KEY = { settings:"wed:settings", people:"wed:people", reservations:"wed:reservations",
+              events:"wed:events", costs:"wed:costs", ideas:"wed:ideas", tasks:"wed:tasks" };
+
+/* who is sitting at this machine. Deliberately per device, not shared. */
+const ME_KEY = "wed:me";
+const getMe = () => localStorage.getItem(ME_KEY) || "";
+const setMe = (v) => localStorage.setItem(ME_KEY, v);
+
+async function load(key, fallback) {
+  if (!CLOUD) {
+    const raw = localStorage.getItem(key);
+    return raw ? JSON.parse(raw) : fallback;
+  }
+  const { data, error } = await sb.from("planner").select("value").eq("key", key).maybeSingle();
+  if (error) throw error;
+  return data ? data.value : fallback;
+}
+
+async function save(key, value) {
+  if (!CLOUD) { localStorage.setItem(key, JSON.stringify(value)); return true; }
+  const { error } = await sb.from("planner").upsert({ key, value, updated_at: new Date().toISOString() });
+  if (error) throw error;
+  return true;
+}
+
+const uid = () => Math.random().toString(36).slice(2,9) + Date.now().toString(36).slice(-3);
+
+/* ------------------------------------------------------------------ dates */
+const iso = (d) => d.toISOString().slice(0,10);
+const parse = (s) => { const [y,m,d] = (s||"").split("-").map(Number); return new Date(Date.UTC(y,(m||1)-1,d||1)); };
+const addDays = (s,n) => { const d = parse(s); d.setUTCDate(d.getUTCDate()+n); return iso(d); };
+const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+const MON = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+const dow = (s) => DOW[parse(s).getUTCDay()];
+const dnum = (s) => parse(s).getUTCDate();
+const pretty = (s) => (s ? `${dow(s)} ${dnum(s)} ${MON[parse(s).getUTCMonth()]}` : "");
+const daysBetween = (a,b) => Math.round((parse(b)-parse(a))/86400000);
+
+/* ------------------------------------------------------------------ schema */
+const KINDS = ["Lodging","Venue","Dining","Transport","Vendor","Other"];
+const RES_STATUS = ["Idea","Held","Booked","Paid"];
+const EVENT_KIND = ["Ceremony","Meal","Travel","Activity","Prep","Other"];
+const RSVP = ["Invited","Yes","Maybe","No"];
+const IDEA_STATUS = ["Considering","Frontrunner","Decided","Passed"];
+const COST_STATUS = ["Planned","Deposit paid","Paid in full"];
+
+const SCHEMA = {
+  people: [
+    { k:"name", l:"Name", t:"text", req:true },
+    { k:"side", l:"Side", t:"select", o:["Ours","Pat","Claire"] },
+    { k:"group", l:"Group", t:"text", ph:"Family, college, work" },
+    { k:"rsvp", l:"RSVP", t:"select", o:RSVP },
+    { k:"arrival", l:"Arrives", t:"date" },
+    { k:"departure", l:"Departs", t:"date" },
+    { k:"resId", l:"Staying at", t:"ref", coll:"reservations", lk:"name", filter:(r)=>r.kind==="Lodging"||!r.kind },
+    { k:"contact", l:"Contact", t:"text", ph:"Email or phone" },
+    { k:"notes", l:"Notes", t:"textarea" },
+  ],
+  reservations: [
+    { k:"name", l:"What", t:"text", req:true, ph:"Villa Barsocchini, 3 nights" },
+    { k:"kind", l:"Type", t:"select", o:KINDS },
+    { k:"status", l:"Status", t:"select", o:RES_STATUS },
+    { k:"start", l:"Starts", t:"date" },
+    { k:"end", l:"Ends", t:"date" },
+    { k:"cost", l:"Total cost", t:"number" },
+    { k:"deposit", l:"Deposit paid", t:"number" },
+    { k:"due", l:"Balance due", t:"date" },
+    { k:"confirmation", l:"Confirmation", t:"text" },
+    { k:"link", l:"Link", t:"url" },
+    { k:"notes", l:"Notes", t:"textarea" },
+  ],
+  events: [
+    { k:"title", l:"Title", t:"text", req:true },
+    { k:"date", l:"Date", t:"date", req:true },
+    { k:"start", l:"Start", t:"time" },
+    { k:"end", l:"End", t:"time" },
+    { k:"kind", l:"Type", t:"select", o:EVENT_KIND },
+    { k:"resId", l:"Reservation", t:"ref", coll:"reservations", lk:"name" },
+    { k:"location", l:"Where", t:"text", ph:"Leave blank to use the reservation" },
+    { k:"guests", l:"Who is included", t:"refs", coll:"people", lk:"name" },
+    { k:"notes", l:"Notes", t:"textarea" },
+  ],
+  costs: [
+    { k:"item", l:"Item", t:"text", req:true },
+    { k:"category", l:"Category", t:"text", ph:"Flowers, music, attire" },
+    { k:"estimate", l:"Estimate", t:"number" },
+    { k:"actual", l:"Actual", t:"number" },
+    { k:"status", l:"Status", t:"select", o:COST_STATUS },
+    { k:"due", l:"Due", t:"date" },
+    { k:"eventId", l:"For which event", t:"ref", coll:"events", lk:"title" },
+    { k:"paidBy", l:"Paid by", t:"text" },
+    { k:"notes", l:"Notes", t:"textarea" },
+  ],
+  ideas: [
+    { k:"title", l:"Idea", t:"text", req:true },
+    { k:"category", l:"About", t:"text", ph:"Welcome dinner, transport" },
+    { k:"status", l:"Status", t:"select", o:IDEA_STATUS },
+    { k:"date", l:"Day it affects", t:"date" },
+    { k:"eventId", l:"Event it affects", t:"ref", coll:"events", lk:"title" },
+    { k:"link", l:"Link", t:"url" },
+    { k:"pros", l:"In favour", t:"textarea" },
+    { k:"cons", l:"Against", t:"textarea" },
+    { k:"notes", l:"Notes", t:"textarea" },
+  ],
+  tasks: [
+    { k:"title", l:"Task", t:"text", req:true, ph:"Send save the dates" },
+    { k:"owner", l:"Whose job", t:"select", o:["Pat","Claire","Both"] },
+    { k:"due", l:"Due", t:"date" },
+    { k:"eventId", l:"Part of", t:"ref", coll:"events", lk:"title" },
+    { k:"notes", l:"Notes", t:"textarea" },
+  ],
+};
+const NOUN = { people:"person", reservations:"reservation", events:"event", costs:"cost", ideas:"idea", tasks:"task" };
+
+const DEFAULT_SETTINGS = {
+  title:"Lucca 2027", venue:"Villa Barsocchini",
+  weddingDate:"2027-08-28", weekStart:"2027-08-23", days:7, currency:"EUR",
+};
+
+/* ------------------------------------------------------------------ helpers */
+const TONE = {
+  Booked:"p-green", Paid:"p-green", Yes:"p-green", Decided:"p-green",
+  "Paid in full":"p-green", Frontrunner:"p-green",
+  Held:"p-brass", Maybe:"p-brass", "Deposit paid":"p-brass", Considering:"p-brass",
+  No:"p-wine", Passed:"p-wine",
+};
+const Pill = ({v}) => (v ? <span className={"lw-pill " + (TONE[v]||"p-grey")}>{v}</span> : null);
+const byId = (rows,id) => rows.find((r)=>r.id===id);
+const spanEnd = (r) => r.end || r.start;
+const covers = (r,d) => r.start && d >= r.start && d <= spanEnd(r);
+
+function Empty({label,action,onClick}) {
+  return <div className="lw-empty"><p>{label}</p><button className="lw-btn" onClick={onClick}>{action}</button></div>;
+}
+
+/* ------------------------------------------------------------------ modal */
+function Modal({title,sub,fields,value,db,links,onSave,onDelete,onClose,onJump,extra}) {
+  const [f,setF] = useState(value);
+  const set = (k,v) => setF((p)=>({...p,[k]:v}));
+  const missing = fields.filter((x)=>x.req && !String(f[x.k]||"").trim());
+  const toggle = (k,id) => {
+    const cur = Array.isArray(f[k]) ? f[k] : [];
+    set(k, cur.includes(id) ? cur.filter((x)=>x!==id) : [...cur,id]);
+  };
+  return (
+    <div className="lw-scrim" onClick={(e)=>e.target===e.currentTarget&&onClose()}>
+      <div className="lw-modal" role="dialog" aria-modal="true">
+        <h2>{title}{sub && <small>{sub}</small>}</h2>
+        <div className="lw-grid">
+          {fields.map((x)=>{
+            const wide = x.t==="textarea" || x.t==="url" || x.t==="refs";
+            const opts = x.coll ? (db[x.coll]||[]).filter(x.filter||(()=>true)) : [];
+            return (
+              <div key={x.k} className={wide?"lw-wide":""}>
+                <label className="lw-lab" htmlFor={"f-"+x.k}>{x.l}{x.req?" *":""}</label>
+                {x.t==="select" && (
+                  <select id={"f-"+x.k} className="lw-in" value={f[x.k]||""} onChange={(e)=>set(x.k,e.target.value)}>
+                    <option value="">Not set</option>
+                    {x.o.map((o)=><option key={o} value={o}>{o}</option>)}
+                  </select>
+                )}
+                {x.t==="ref" && (
+                  <select id={"f-"+x.k} className="lw-in" value={f[x.k]||""} onChange={(e)=>set(x.k,e.target.value)}>
+                    <option value="">Not linked</option>
+                    {opts.map((o)=><option key={o.id} value={o.id}>{o[x.lk]||"Untitled"}</option>)}
+                  </select>
+                )}
+                {x.t==="refs" && (opts.length===0
+                  ? <div className="lw-picker" style={{padding:10,fontSize:12,color:"var(--ink2)"}}>Add people first and they will show up here.</div>
+                  : <div className="lw-picker">
+                      {opts.map((o)=>(
+                        <label className="lw-pick" key={o.id}>
+                          <input type="checkbox" checked={(f[x.k]||[]).includes(o.id)} onChange={()=>toggle(x.k,o.id)} />
+                          <span>{o[x.lk]}</span>
+                          {o.rsvp && <span className="sub">{o.rsvp}</span>}
+                        </label>
+                      ))}
+                    </div>
+                )}
+                {x.t==="textarea" && (
+                  <textarea id={"f-"+x.k} className="lw-in" value={f[x.k]||""} placeholder={x.ph||""} onChange={(e)=>set(x.k,e.target.value)} />
+                )}
+                {["text","number","date","time","url"].includes(x.t) && (
+                  <input id={"f-"+x.k} className="lw-in"
+                    type={x.t==="number"?"number":x.t==="date"?"date":x.t==="time"?"time":"text"}
+                    inputMode={x.t==="number"?"decimal":undefined}
+                    value={f[x.k]||""} placeholder={x.ph||""} onChange={(e)=>set(x.k,e.target.value)} />
+                )}
+              </div>
+            );
+          })}
+          {links && links.length>0 && (
+            <div className="lw-links">
+              <div className="h">Linked to this</div>
+              {links.map((l)=>(
+                <button key={l.coll+l.item.id} className="lw-link" onClick={()=>onJump(l.coll,l.item)}>{l.label}</button>
+              ))}
+            </div>
+          )}
+          {extra}
+        </div>
+        <div className="lw-acts">
+          <button className="lw-btn" disabled={missing.length>0} onClick={()=>onSave(f)}>Save</button>
+          <button className="lw-btn ghost" onClick={onClose}>Cancel</button>
+          {onDelete && <button className="lw-btn danger" style={{marginLeft:"auto"}} onClick={onDelete}>Delete</button>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ sign in gate (cloud only) */
+function Gate() {
+  const [email,setEmail] = useState("");
+  const [pw,setPw] = useState("");
+  const [err,setErr] = useState("");
+  const [busy,setBusy] = useState(false);
+  const go = async () => {
+    setBusy(true); setErr("");
+    const { error } = await sb.auth.signInWithPassword({ email, password: pw });
+    if (error) setErr(error.message);
+    setBusy(false);
+  };
+  const ok = email && pw;
+  return (
+    <div className="lw-gate">
+      <h1>Lucca 2027</h1>
+      <p>Sign in to open the planner.</p>
+      <label className="lw-lab" htmlFor="g-email">Email</label>
+      <input id="g-email" className="lw-in" type="email" autoComplete="username" value={email}
+        onChange={(e)=>setEmail(e.target.value)} />
+      <div style={{height:10}} />
+      <label className="lw-lab" htmlFor="g-pw">Password</label>
+      <input id="g-pw" className="lw-in" type="password" autoComplete="current-password" value={pw}
+        onChange={(e)=>setPw(e.target.value)} onKeyDown={(e)=>e.key==="Enter"&&ok&&go()} />
+      <div className="lw-acts">
+        <button className="lw-btn" disabled={!ok||busy} onClick={go}>{busy?"Signing in":"Sign in"}</button>
+      </div>
+      {err && <p style={{color:"var(--wine)"}}>{err}</p>}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ app */
+function App() {
+  const [session,setSession] = useState(CLOUD ? undefined : null);
+  const [tab,setTab] = useState("week");
+  const [ready,setReady] = useState(false);
+  const [note,setNote] = useState("Loading");
+  const [settings,setSettings] = useState(DEFAULT_SETTINGS);
+  const [db,setDb] = useState({ people:[], reservations:[], events:[], costs:[], ideas:[], tasks:[] });
+  const [me,setMeState] = useState(getMe());
+  const [edit,setEdit] = useState(null);
+  const [sheet,setSheet] = useState(null);
+  const [q,setQ] = useState("");
+  const [showSettings,setShowSettings] = useState(false);
+  const [problem,setProblem] = useState("");
+  const writing = useRef(false);
+
+  useEffect(()=>{
+    if (!CLOUD) return;
+    sb.auth.getSession().then(({data})=>setSession(data.session));
+    const { data:sub } = sb.auth.onAuthStateChange((_e,s)=>setSession(s));
+    return ()=>sub.subscription.unsubscribe();
+  },[]);
+
+  const pull = useCallback(async ()=>{
+    try {
+      const [s,people,reservations,events,costs,ideas,tasks] = await Promise.all([
+        load(KEY.settings, DEFAULT_SETTINGS),
+        load(KEY.people,[]), load(KEY.reservations,[]),
+        load(KEY.events,[]), load(KEY.costs,[]), load(KEY.ideas,[]), load(KEY.tasks,[]),
+      ]);
+      setSettings({...DEFAULT_SETTINGS,...s});
+      setDb({people,reservations,events,costs,ideas,tasks});
+      setProblem("");
+      setNote((CLOUD?"Live ":"Local ") + new Date().toLocaleTimeString([],{hour:"2-digit",minute:"2-digit"}));
+    } catch(e) {
+      console.error(e);
+      setProblem(e.message || "Could not reach the database.");
+      setNote("Not loaded");
+    }
+    setReady(true);
+  },[]);
+
+  useEffect(()=>{ if (!CLOUD || session) pull(); },[pull,session]);
+
+  /* live sync: when the other side writes, refetch */
+  useEffect(()=>{
+    if (!CLOUD || !session) return;
+    const ch = sb.channel("planner-live")
+      .on("postgres_changes",{event:"*",schema:"public",table:"planner"},()=>{
+        if (!writing.current) pull();
+      }).subscribe();
+    return ()=>{ sb.removeChannel(ch); };
+  },[session,pull]);
+
+  useEffect(()=>{
+    const h = ()=>{ if (document.visibilityState==="visible" && (!CLOUD||session)) pull(); };
+    window.addEventListener("focus",h);
+    document.addEventListener("visibilitychange",h);
+    return ()=>{ window.removeEventListener("focus",h); document.removeEventListener("visibilitychange",h); };
+  },[pull,session]);
+
+  const write = async (coll,rows)=>{
+    setDb((p)=>({...p,[coll]:rows}));
+    setNote("Saving"); writing.current = true;
+    try { await save(KEY[coll],rows); setNote("Saved"); }
+    catch(e){ setNote("Save failed. Try again."); console.error(e); }
+    finally { setTimeout(()=>{ writing.current = false; }, 800); }
+  };
+
+  const open = (coll,item)=>setEdit({coll,item:item||{},isNew:!item||!item.id});
+
+  const commit = async (row)=>{
+    const {coll,isNew} = edit;
+    const rows = isNew ? [...db[coll],{...row,id:uid()}] : db[coll].map((r)=>(r.id===row.id?row:r));
+    setEdit(null);
+    await write(coll,rows);
+  };
+
+  const remove = async ()=>{
+    const {coll,item} = edit;
+    setEdit(null);
+    const next = {...db,[coll]:db[coll].filter((r)=>r.id!==item.id)};
+    if (coll==="reservations") {
+      next.events = db.events.map((e)=>(e.resId===item.id?{...e,resId:""}:e));
+      next.people = db.people.map((p)=>(p.resId===item.id?{...p,resId:""}:p));
+    }
+    if (coll==="events") {
+      next.costs = db.costs.map((c)=>(c.eventId===item.id?{...c,eventId:""}:c));
+      next.ideas = db.ideas.map((i)=>(i.eventId===item.id?{...i,eventId:""}:i));
+      next.tasks = db.tasks.map((t)=>(t.eventId===item.id?{...t,eventId:""}:t));
+    }
+    if (coll==="people") {
+      next.events = db.events.map((e)=>({...e,guests:(e.guests||[]).filter((g)=>g!==item.id)}));
+    }
+    setDb(next); setNote("Saving"); writing.current = true;
+    try {
+      await Promise.all(Object.keys(KEY).filter((k)=>k!=="settings").map((k)=>save(KEY[k],next[k])));
+      setNote("Saved");
+    } catch(e){ setNote("Save failed. Try again."); }
+    finally { setTimeout(()=>{ writing.current = false; }, 800); }
+  };
+
+  const money = (n)=>{
+    const v = Number(n||0);
+    const sym = settings.currency==="EUR" ? "\u20AC" : settings.currency==="GBP" ? "\u00A3" : "$";
+    return sym + v.toLocaleString(undefined,{maximumFractionDigits:0});
+  };
+
+  const days = useMemo(()=>{
+    const n = Math.max(1,Math.min(14,Number(settings.days)||7));
+    return Array.from({length:n},(_,i)=>addDays(settings.weekStart,i));
+  },[settings.weekStart,settings.days]);
+
+  const countdown = daysBetween(iso(new Date()), settings.weddingDate);
+
+  const filt = (rows,keys)=>{
+    const s = q.trim().toLowerCase();
+    if (!s) return rows;
+    return rows.filter((r)=>keys.some((k)=>String(r[k]||"").toLowerCase().includes(s)));
+  };
+
+  const backlinks = (coll,item)=>{
+    if (!item||!item.id) return [];
+    const out = [];
+    if (coll==="reservations") {
+      db.events.filter((e)=>e.resId===item.id).forEach((e)=>out.push({coll:"events",item:e,label:"Event: "+e.title}));
+      db.people.filter((p)=>p.resId===item.id).forEach((p)=>out.push({coll:"people",item:p,label:"Staying: "+p.name}));
+    }
+    if (coll==="events") {
+      const r = byId(db.reservations,item.resId);
+      if (r) out.push({coll:"reservations",item:r,label:"Reservation: "+r.name});
+      db.costs.filter((c)=>c.eventId===item.id).forEach((c)=>out.push({coll:"costs",item:c,label:"Cost: "+c.item}));
+      db.ideas.filter((i)=>i.eventId===item.id).forEach((i)=>out.push({coll:"ideas",item:i,label:"Idea: "+i.title}));
+      db.tasks.filter((t)=>t.eventId===item.id).forEach((t)=>out.push({coll:"tasks",item:t,label:"To do: "+t.title}));
+    }
+    if (coll==="people") {
+      const r = byId(db.reservations,item.resId);
+      if (r) out.push({coll:"reservations",item:r,label:"Staying: "+r.name});
+      db.events.filter((e)=>(e.guests||[]).includes(item.id)).forEach((e)=>out.push({coll:"events",item:e,label:"Event: "+e.title}));
+    }
+    if (coll==="costs"||coll==="ideas"||coll==="tasks") {
+      const e = byId(db.events,item.eventId);
+      if (e) out.push({coll:"events",item:e,label:"Event: "+e.title});
+    }
+    return out;
+  };
+
+  /* export / import so the data is never trapped */
+  const exportJson = ()=>{
+    const blob = new Blob([JSON.stringify({settings,...db},null,2)],{type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "lucca-" + iso(new Date()) + ".json";
+    a.click(); URL.revokeObjectURL(a.href);
+  };
+  const importJson = async (file)=>{
+    const text = await file.text();
+    const d = JSON.parse(text);
+    const next = {
+      people:d.people||[], reservations:d.reservations||[], events:d.events||[],
+      costs:d.costs||[], ideas:d.ideas||[], tasks:d.tasks||[],
+    };
+    setDb(next);
+    if (d.settings) { setSettings({...DEFAULT_SETTINGS,...d.settings}); await save(KEY.settings,{...DEFAULT_SETTINGS,...d.settings}); }
+    await Promise.all(Object.keys(next).map((k)=>save(KEY[k],next[k])));
+    setNote("Imported"); setShowSettings(false);
+  };
+
+  if (CLOUD && session===undefined) return <div className="lw-shell"><p className="lw-status">Checking your sign in</p></div>;
+  if (CLOUD && session===null) return <Gate />;
+  if (!ready) return <div className="lw-shell"><p className="lw-status">Opening the planner</p></div>;
+
+  const openTasks = db.tasks.filter((t)=>!t.done).length;
+  const TABS = [["week","The week"],["tasks","To do" + (openTasks?" ("+openTasks+")":"")],["people","People"],
+                ["reservations","Reservations"],["money","Money"],["ideas","Ideas"]];
+
+  return (
+    <div className="lw-shell">
+      <header className="lw-top">
+        <div>
+          <h1 className="lw-mast">{settings.title}</h1>
+          <div className="lw-sub">{settings.venue} &middot; {pretty(settings.weddingDate)} {parse(settings.weddingDate).getUTCFullYear()}</div>
+        </div>
+        <div className="lw-count">
+          <b>{countdown>0?countdown:countdown===0?"Today":"\u2014"}</b>
+          {countdown>0?"days to go":countdown===0?"the day":"in the past"}
+        </div>
+      </header>
+
+      <nav className="lw-tabs" role="tablist">
+        {TABS.map(([k,l])=>(
+          <button key={k} role="tab" aria-selected={tab===k} className="lw-tab" onClick={()=>{setTab(k);setQ("");}}>{l}</button>
+        ))}
+        <span style={{marginLeft:"auto",display:"flex",gap:8,alignItems:"center"}}>
+          <span className={"lw-mode" + (CLOUD?" live":"")}>{CLOUD?"Shared":"This device only"}</span>
+          <button className="lw-tab" onClick={()=>setShowSettings(true)}>Setup</button>
+        </span>
+      </nav>
+
+      {problem && (
+        <div style={{border:"1px solid var(--wine)",color:"var(--wine)",background:"var(--card)",
+          borderRadius:2,padding:"10px 12px",marginBottom:14,fontSize:13,lineHeight:1.5}}>
+          <b>The database said no.</b> {problem}
+          <div style={{color:"var(--ink2)",marginTop:4}}>
+            Usually this means the SQL step has not been run, or the email you signed in with is not in the allowlist in schema.sql.
+          </div>
+        </div>
+      )}
+
+      {tab==="week" && (
+        <>
+          <div className="lw-bar">
+            <button className="lw-btn" onClick={()=>open("events",null)}>Add event</button>
+            <span className="lw-status" style={{marginLeft:"auto"}}>{note}</span>
+            <button className="lw-btn ghost" onClick={pull}>Refresh</button>
+          </div>
+          <div className="lw-week" style={{gridTemplateColumns:`repeat(${days.length}, minmax(0,1fr))`}}>
+            {days.map((d)=>{
+              const evs = db.events.filter((e)=>e.date===d).sort((a,b)=>(a.start||"99").localeCompare(b.start||"99"));
+              const arr = db.people.filter((p)=>p.arrival===d);
+              const dep = db.people.filter((p)=>p.departure===d);
+              const here = db.people.filter((p)=>p.arrival && p.arrival<=d && (!p.departure||p.departure>=d));
+              const spans = db.reservations.filter((r)=>covers(r,d));
+              const dues = db.costs.filter((c)=>c.due===d)
+                .concat(db.reservations.filter((r)=>r.due===d).map((r)=>({...r,item:r.name+" balance",_res:true})));
+              const dayIdeas = db.ideas.filter((i)=>i.date===d && i.status!=="Passed");
+              return (
+                <div key={d} className={"lw-day"+(d===settings.weddingDate?" wed":"")}>
+                  <div className="lw-dayhead">
+                    <button className="lw-daybtn" onClick={()=>setSheet(d)} title="Open the day sheet">
+                      <span className="lw-dnum">{dnum(d)}</span>
+                      <span className="lw-dow">{dow(d)}</span>
+                    </button>
+                    <button className="lw-add" title="Add an event on this day" onClick={()=>open("events",{date:d})}>+</button>
+                  </div>
+                  <div className="lw-daybody">
+                    {spans.map((r)=>{
+                      const pos = r.start===d ? "s" : spanEnd(r)===d ? "e" : "m";
+                      return (
+                        <button key={r.id} className={"lw-rail "+pos} onClick={()=>open("reservations",r)} title={r.name}>
+                          <span className="bar" /><span className="lbl">{r.name}</span>
+                        </button>
+                      );
+                    })}
+                    {evs.map((e)=>{
+                      const r = byId(db.reservations,e.resId);
+                      const n = (e.guests||[]).length;
+                      return (
+                        <button key={e.id} className={"lw-ev "+(e.kind||"")} onClick={()=>open("events",e)}>
+                          {e.start && <div className="t">{e.start}{e.end?"\u2013"+e.end:""}</div>}
+                          <div className="n">{e.title}</div>
+                          {(e.location||r) && <div className="w">{e.location||r.name}</div>}
+                          {(n>0||r) && (
+                            <div className="meta">
+                              {n>0 && <span>{n} {n===1?"guest":"guests"}</span>}
+                              {r && <span>{r.status||"linked"}</span>}
+                            </div>
+                          )}
+                        </button>
+                      );
+                    })}
+                    {dues.map((c)=>(
+                      <button key={"due"+c.id} className="lw-chip money"
+                        onClick={()=>open(c._res?"reservations":"costs", c._res?byId(db.reservations,c.id):c)}>
+                        {money(c._res ? Number(c.cost||0)-Number(c.deposit||0) : (c.estimate||c.actual))} due &middot; {c.item}
+                      </button>
+                    ))}
+                    {db.tasks.filter((t)=>t.due===d && !t.done).map((t)=>(
+                      <button key={"task"+t.id} className="lw-chip task" onClick={()=>open("tasks",t)}>
+                        &#9744; {t.title}{t.owner?" \u00B7 "+t.owner:""}
+                      </button>
+                    ))}
+                    {dayIdeas.map((i)=>(
+                      <button key={"idea"+i.id} className="lw-chip idea" onClick={()=>open("ideas",i)}>{i.title}</button>
+                    ))}
+                  </div>
+                  <div className="lw-tide">
+                    {arr.map((p)=><button className="row" key={p.id} onClick={()=>open("people",p)}><span className="g in">&#9662;</span><span>{p.name}</span></button>)}
+                    {dep.map((p)=><button className="row" key={p.id} onClick={()=>open("people",p)}><span className="g out">&#9652;</span><span>{p.name}</span></button>)}
+                    <div className="here">{here.length} on the ground</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <p className="lw-foot" style={{marginTop:14,borderTop:0,paddingTop:0}}>
+            Rails are reservations running across their nights. Triangles are arrivals and departures. Outlined chips are money due and ideas parked on that day.
+            Click a date to open its day sheet, or click anything to edit it in place.
+          </p>
+        </>
+      )}
+
+      {tab==="people" && (
+        <>
+          <div className="lw-bar">
+            <button className="lw-btn" onClick={()=>open("people",null)}>Add person</button>
+            <input className="lw-field lw-search" placeholder="Search people" value={q} onChange={(e)=>setQ(e.target.value)} />
+            <span className="lw-status" style={{marginLeft:"auto"}}>
+              {db.people.filter((p)=>p.rsvp==="Yes").length} yes / {db.people.length} invited
+            </span>
+          </div>
+          {db.people.length===0 ? (
+            <Empty label="No one on the list yet." action="Add the first person" onClick={()=>open("people",null)} />
+          ) : (
+            <div className="lw-tablewrap">
+              <table className="lw-table">
+                <thead><tr><th>Name</th><th>Group</th><th>RSVP</th><th>Arrives</th><th>Departs</th><th>Staying at</th><th>Events</th></tr></thead>
+                <tbody>
+                  {filt(db.people,["name","group","notes","contact"]).slice().sort((a,b)=>(a.name||"").localeCompare(b.name||"")).map((p)=>{
+                    const r = byId(db.reservations,p.resId);
+                    const evs = db.events.filter((e)=>(e.guests||[]).includes(p.id));
+                    return (
+                      <tr key={p.id} onClick={()=>open("people",p)} style={{cursor:"pointer"}}>
+                        <td><div className="lw-name">{p.name}</div>{p.contact && <div className="lw-note">{p.contact}</div>}</td>
+                        <td>{p.group||""}{p.side && p.side!=="Ours" ? <div className="lw-note">{p.side}</div> : null}</td>
+                        <td><Pill v={p.rsvp} /></td>
+                        <td className="mono">{pretty(p.arrival)}</td>
+                        <td className="mono">{pretty(p.departure)}</td>
+                        <td>{r?r.name:""}{p.notes && <div className="lw-note">{p.notes}</div>}</td>
+                        <td className="mono">{evs.length||""}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
+      )}
+
+      {tab==="reservations" && (
+        <>
+          <div className="lw-bar">
+            <button className="lw-btn" onClick={()=>open("reservations",null)}>Add reservation</button>
+            <input className="lw-field lw-search" placeholder="Search reservations" value={q} onChange={(e)=>setQ(e.target.value)} />
+          </div>
+          {db.reservations.length===0 ? (
+            <Empty label="Nothing booked or held yet." action="Add the first reservation" onClick={()=>open("reservations",null)} />
+          ) : (
+            <div className="lw-tablewrap">
+              <table className="lw-table">
+                <thead><tr><th>What</th><th>Type</th><th>Status</th><th>Dates</th><th className="num">Cost</th><th>Linked</th></tr></thead>
+                <tbody>
+                  {filt(db.reservations,["name","kind","confirmation","notes"]).slice().sort((a,b)=>(a.start||"z").localeCompare(b.start||"z")).map((r)=>{
+                    const evs = db.events.filter((e)=>e.resId===r.id);
+                    const guests = db.people.filter((p)=>p.resId===r.id);
+                    return (
+                      <tr key={r.id} onClick={()=>open("reservations",r)} style={{cursor:"pointer"}}>
+                        <td>
+                          <div className="lw-name">{r.name}</div>
+                          {r.confirmation && <div className="lw-note" style={{fontFamily:"var(--mono)"}}>{r.confirmation}</div>}
+                          {r.link && <div className="lw-note"><a href={r.link} target="_blank" rel="noreferrer" onClick={(e)=>e.stopPropagation()}>Open link</a></div>}
+                        </td>
+                        <td>{r.kind||""}</td>
+                        <td><Pill v={r.status} /></td>
+                        <td className="mono">{pretty(r.start)}{r.end?" \u2192 "+pretty(r.end):""}{r.due && <div style={{color:"var(--wine)"}}>balance {pretty(r.due)}</div>}</td>
+                        <td className="num">{r.cost?money(r.cost):""}{r.deposit?<div style={{fontSize:11,color:"var(--ink2)"}}>{money(r.deposit)} down</div>:null}</td>
+                        <td className="lw-note" style={{marginTop:0}}>
+                          {evs.length>0 && <div>{evs.length} {evs.length===1?"event":"events"}</div>}
+                          {guests.length>0 && <div>{guests.length} staying</div>}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </>
+      )}
+
+      {tab==="tasks" && <Tasks db={db} write={write} open={open} me={me}
+        setMe={(v)=>{setMe(v);setMeState(v);}} q={q} setQ={setQ} />}
+
+      {tab==="money" && <Money db={db} money={money} open={open} />}
+
+      {tab==="ideas" && (
+        <>
+          <div className="lw-bar">
+            <button className="lw-btn" onClick={()=>open("ideas",null)}>Add idea</button>
+            <input className="lw-field lw-search" placeholder="Search ideas" value={q} onChange={(e)=>setQ(e.target.value)} />
+          </div>
+          {db.ideas.length===0 ? (
+            <Empty label="No options parked here yet. This is the place for the things you are still weighing." action="Add the first idea" onClick={()=>open("ideas",null)} />
+          ) : (
+            <div className="lw-board">
+              {IDEA_STATUS.map((st)=>(
+                <div className="lw-col" key={st}>
+                  <h3>{st}</h3>
+                  {filt(db.ideas,["title","category","pros","cons","notes"]).filter((i)=>(i.status||"Considering")===st).map((i)=>{
+                    const e = byId(db.events,i.eventId);
+                    return (
+                      <button key={i.id} className="lw-idea" onClick={()=>open("ideas",i)}>
+                        {(i.category||e||i.date) && (
+                          <div className="c">{[i.category, e?e.title:null, i.date?pretty(i.date):null].filter(Boolean).join(" \u00B7 ")}</div>
+                        )}
+                        <div className="t">{i.title}</div>
+                        {i.pros && <div className="p">+ {i.pros}</div>}
+                        {i.cons && <div className="p">&minus; {i.cons}</div>}
+                      </button>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          )}
+        </>
+      )}
+
+      <footer className="lw-foot">
+        {CLOUD
+          ? "Saved to your own Supabase project. Both of you see the same data and changes appear live. If you both edit the same row at the same moment, the last save wins."
+          : "Saved to this browser only. Nothing leaves this device, and nothing is shared. Add your Supabase keys at the top of the file to sync with Claire."}
+      </footer>
+
+      {sheet && (
+        <div className="lw-scrim" onClick={(e)=>e.target===e.currentTarget&&setSheet(null)}>
+          <div className="lw-modal" role="dialog" aria-modal="true">
+            <h2>{pretty(sheet)}<small>{sheet===settings.weddingDate?"The wedding day":"Day sheet"}</small></h2>
+            <DaySheet d={sheet} db={db} money={money} onPick={(coll,item)=>{setSheet(null);open(coll,item);}} />
+            <div className="lw-acts">
+              <button className="lw-btn" onClick={()=>{setSheet(null);open("events",{date:sheet});}}>Add event</button>
+              <button className="lw-btn ghost" onClick={()=>setSheet(null)}>Close</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {edit && (
+        <Modal
+          title={(edit.isNew?"New ":"Edit ")+NOUN[edit.coll]}
+          sub={edit.coll==="events"&&edit.item.date?pretty(edit.item.date):null}
+          fields={SCHEMA[edit.coll]} value={edit.item} db={db}
+          links={backlinks(edit.coll,edit.item)}
+          onJump={(coll,item)=>open(coll,item)}
+          onSave={commit} onDelete={edit.isNew?null:remove} onClose={()=>setEdit(null)}
+        />
+      )}
+
+      {showSettings && (
+        <Modal
+          title="Setup"
+          fields={[
+            { k:"title", l:"Name", t:"text", req:true },
+            { k:"venue", l:"Venue", t:"text" },
+            { k:"weddingDate", l:"Wedding day", t:"date", req:true },
+            { k:"weekStart", l:"Week starts", t:"date", req:true },
+            { k:"days", l:"Days shown", t:"number" },
+            { k:"currency", l:"Currency", t:"select", o:["EUR","USD","GBP"] },
+          ]}
+          value={settings} db={db}
+          extra={
+            <div className="lw-links">
+              <div className="h">Your data</div>
+              <button className="lw-link" onClick={exportJson}>Download a JSON backup</button>
+              <label className="lw-link" style={{display:"inline-block",cursor:"pointer"}}>
+                Load a JSON backup
+                <input type="file" accept="application/json" style={{display:"none"}}
+                  onChange={(e)=>e.target.files[0]&&importJson(e.target.files[0])} />
+              </label>
+              {CLOUD && <button className="lw-link" onClick={()=>sb.auth.signOut()}>Sign out</button>}
+              <p className="lw-note" style={{marginTop:8}}>
+                On this device you are <b>{me || "nobody yet"}</b>. This is only used to sign off tasks, and it is not shared.
+              </p>
+              <button className="lw-link" onClick={()=>{const v = me==="Pat"?"Claire":"Pat"; setMe(v); setMeState(v);}}>
+                Switch to {me==="Pat"?"Claire":"Pat"}
+              </button>
+              <p className="lw-note">Loading a backup replaces everything currently here.</p>
+            </div>
+          }
+          onSave={async (s)=>{ setSettings(s); setShowSettings(false); setNote("Saving"); await save(KEY.settings,s); setNote("Saved"); }}
+          onClose={()=>setShowSettings(false)}
+        />
+      )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ to do */
+const OWNER_TONE = { Pat:"o-pat", Claire:"o-claire", Both:"o-both" };
+
+function Tasks({db,write,open,me,setMe,q,setQ}) {
+  const [drag,setDrag] = useState(null);
+  const [over,setOver] = useState(null);
+  const [showDone,setShowDone] = useState(false);
+  const today = iso(new Date());
+
+  const rank = (t) => (typeof t.rank === "number" ? t.rank : 9999);
+  const live = db.tasks.filter((t)=>!t.done).sort((a,b)=>rank(a)-rank(b));
+  const done = db.tasks.filter((t)=>t.done).sort((a,b)=>(b.doneAt||"").localeCompare(a.doneAt||""));
+
+  const match = (t) => {
+    const s = q.trim().toLowerCase();
+    if (!s) return true;
+    return ["title","notes","owner","doneBy"].some((k)=>String(t[k]||"").toLowerCase().includes(s));
+  };
+
+  const applyOrder = (list) => {
+    const r = {};
+    list.forEach((t,i)=>{ r[t.id] = i; });
+    return write("tasks", db.tasks.map((t)=>(t.id in r ? {...t, rank:r[t.id]} : t)));
+  };
+
+  const drop = (toId) => {
+    setOver(null);
+    if (!drag || drag === toId) { setDrag(null); return; }
+    const list = live.slice();
+    const fi = list.findIndex((t)=>t.id===drag);
+    const ti = list.findIndex((t)=>t.id===toId);
+    setDrag(null);
+    if (fi < 0 || ti < 0) return;
+    const [moved] = list.splice(fi,1);
+    list.splice(ti,0,moved);
+    applyOrder(list);
+  };
+
+  const nudge = (id,dir) => {
+    const list = live.slice();
+    const i = list.findIndex((t)=>t.id===id);
+    const j = i + dir;
+    if (i < 0 || j < 0 || j >= list.length) return;
+    [list[i],list[j]] = [list[j],list[i]];
+    applyOrder(list);
+  };
+
+  const tick = (t) => {
+    const now = !t.done;
+    write("tasks", db.tasks.map((x)=>(x.id===t.id
+      ? {...x, done:now, doneBy: now ? me : "", doneAt: now ? new Date().toISOString() : ""}
+      : x)));
+  };
+
+  const add = () => {
+    const next = live.length ? Math.max(...live.map(rank)) + 1 : 0;
+    open("tasks", { rank: next, owner: me || "" });
+  };
+
+  const doneWhen = (t) => {
+    if (!t.doneAt) return "";
+    const d = new Date(t.doneAt);
+    return `${d.getDate()} ${MON[d.getMonth()]}`;
+  };
+
+  const tally = {};
+  done.forEach((t)=>{ if (t.doneBy) tally[t.doneBy] = (tally[t.doneBy]||0) + 1; });
+
+  return (
+    <>
+      {!me && (
+        <div className="lw-who">
+          <span>Who is using this device? Only used to sign off tasks.</span>
+          <button className="lw-btn ghost" onClick={()=>setMe("Pat")}>Pat</button>
+          <button className="lw-btn ghost" onClick={()=>setMe("Claire")}>Claire</button>
+        </div>
+      )}
+
+      <div className="lw-bar">
+        <button className="lw-btn" onClick={add}>Add task</button>
+        <input className="lw-field lw-search" placeholder="Search tasks" value={q} onChange={(e)=>setQ(e.target.value)} />
+        <button className="lw-btn ghost" onClick={()=>setShowDone(!showDone)}>
+          {showDone ? "Hide done" : `Show done (${done.length})`}
+        </button>
+        <span className="lw-status" style={{marginLeft:"auto"}}>
+          {live.length} open{Object.keys(tally).length ? " \u00B7 " + Object.entries(tally).map(([k,v])=>`${k} ${v}`).join(", ") + " done" : ""}
+        </span>
+      </div>
+
+      {live.length===0 && done.length===0 ? (
+        <Empty label="Nothing on the list. Top of the list is what gets done next." action="Add the first task" onClick={add} />
+      ) : (
+        <>
+          {live.filter(match).map((t,i)=>{
+            const e = byId(db.events,t.eventId);
+            const late = t.due && t.due < today;
+            return (
+              <div key={t.id}
+                className={"lw-task" + (drag===t.id?" dragging":"") + (over===t.id?" over":"")}
+                draggable
+                onDragStart={()=>setDrag(t.id)}
+                onDragEnd={()=>{setDrag(null);setOver(null);}}
+                onDragOver={(ev)=>{ev.preventDefault();setOver(t.id);}}
+                onDragLeave={()=>setOver((o)=>o===t.id?null:o)}
+                onDrop={(ev)=>{ev.preventDefault();drop(t.id);}}>
+                <span className="lw-grip" title="Drag to reorder">&#8942;&#8942;</span>
+                <span className="lw-rank">{i+1}</span>
+                <input className="lw-check" type="checkbox" checked={false}
+                  aria-label={"Mark " + t.title + " done"} onChange={()=>tick(t)} />
+                <div className="lw-taskbody">
+                  <button className="lw-tasktitle" onClick={()=>open("tasks",t)}>{t.title}</button>
+                  <div className="lw-taskmeta">
+                    {t.owner && <span className={"lw-owner " + (OWNER_TONE[t.owner]||"")}>{t.owner}</span>}
+                    {t.due && <span className={late?"late":""}>{late?"overdue ":""}{pretty(t.due)}</span>}
+                    {e && <span>{e.title}</span>}
+                  </div>
+                  {t.notes && <div className="lw-note">{t.notes}</div>}
+                </div>
+                <div className="lw-nudge">
+                  <button onClick={()=>nudge(t.id,-1)} disabled={i===0} aria-label="Move up">&#9650;</button>
+                  <button onClick={()=>nudge(t.id,1)} disabled={i===live.length-1} aria-label="Move down">&#9660;</button>
+                </div>
+              </div>
+            );
+          })}
+
+          {showDone && done.filter(match).map((t)=>(
+            <div key={t.id} className="lw-task done">
+              <span className="lw-grip" style={{visibility:"hidden"}}>&#8942;&#8942;</span>
+              <span className="lw-rank" />
+              <input className="lw-check" type="checkbox" checked readOnly
+                aria-label={"Reopen " + t.title} onChange={()=>tick(t)} />
+              <div className="lw-taskbody">
+                <button className="lw-tasktitle" onClick={()=>open("tasks",t)}>{t.title}</button>
+                <div className="lw-taskmeta">
+                  <span style={{color:"var(--cypress)"}}>
+                    {t.doneBy ? t.doneBy + " did this" : "done"}{doneWhen(t) ? ", " + doneWhen(t) : ""}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </>
+      )}
+
+      <p className="lw-foot" style={{borderTop:0,paddingTop:0,marginTop:14}}>
+        The list is ranked, so number one is the next thing either of you should pick up. Drag to reorder, or use the arrows.
+        Ticking a task signs your name to it.
+      </p>
+    </>
+  );
+}
+
+/* ------------------------------------------------------------------ day sheet */
+function DaySheet({d,db,money,onPick}) {
+  const evs = db.events.filter((e)=>e.date===d).sort((a,b)=>(a.start||"99").localeCompare(b.start||"99"));
+  const spans = db.reservations.filter((r)=>covers(r,d));
+  const arr = db.people.filter((p)=>p.arrival===d);
+  const dep = db.people.filter((p)=>p.departure===d);
+  const here = db.people.filter((p)=>p.arrival && p.arrival<=d && (!p.departure||p.departure>=d));
+  const dues = db.costs.filter((c)=>c.due===d);
+  const resDues = db.reservations.filter((r)=>r.due===d);
+  const ideas = db.ideas.filter((i)=>i.date===d);
+  const tasks = db.tasks.filter((t)=>t.due===d);
+  const dayCost = evs.reduce((s,e)=>s+db.costs.filter((c)=>c.eventId===e.id).reduce((t,c)=>t+Number(c.estimate||0),0),0);
+  const nothing = !evs.length && !spans.length && !arr.length && !dep.length && !dues.length && !resDues.length && !ideas.length && !tasks.length;
+  if (nothing) return <p style={{color:"var(--ink2)",fontSize:13,margin:0}}>Nothing on this day yet.</p>;
+  return (
+    <div className="lw-sheet">
+      {evs.length>0 && (<>
+        <h4>Schedule{dayCost>0?" \u00B7 "+money(dayCost)+" budgeted":""}</h4>
+        {evs.map((e)=>{
+          const r = byId(db.reservations,e.resId);
+          const names = (e.guests||[]).map((g)=>byId(db.people,g)).filter(Boolean).map((p)=>p.name);
+          return (
+            <button className="lw-row" key={e.id} onClick={()=>onPick("events",e)}>
+              <span className="a">{e.start||"\u2014"}</span>
+              <span className="b">{e.title}
+                {(e.location||r) && <div style={{color:"var(--ink2)",fontSize:12}}>{e.location||r.name}</div>}
+                {names.length>0 && <div style={{color:"var(--ink2)",fontSize:12}}>{names.slice(0,6).join(", ")}{names.length>6?` +${names.length-6}`:""}</div>}
+              </span>
+              <span className="c">{e.kind||""}</span>
+            </button>
+          );
+        })}
+      </>)}
+      {spans.length>0 && (<>
+        <h4>Reservations live this day</h4>
+        {spans.map((r)=>(
+          <button className="lw-row" key={r.id} onClick={()=>onPick("reservations",r)}>
+            <span className="a">{r.kind||""}</span><span className="b">{r.name}</span><span className="c">{r.status||""}</span>
+          </button>
+        ))}
+      </>)}
+      {(arr.length>0||dep.length>0) && (<>
+        <h4>Movements &middot; {here.length} on the ground</h4>
+        {arr.map((p)=>(
+          <button className="lw-row" key={"a"+p.id} onClick={()=>onPick("people",p)}>
+            <span className="a" style={{color:"var(--cypress)"}}>arrives</span>
+            <span className="b">{p.name}</span>
+            <span className="c">{(byId(db.reservations,p.resId)||{}).name||""}</span>
+          </button>
+        ))}
+        {dep.map((p)=>(
+          <button className="lw-row" key={"d"+p.id} onClick={()=>onPick("people",p)}>
+            <span className="a" style={{color:"var(--wine)"}}>departs</span>
+            <span className="b">{p.name}</span><span className="c" />
+          </button>
+        ))}
+      </>)}
+      {(dues.length>0||resDues.length>0) && (<>
+        <h4>Money due</h4>
+        {resDues.map((r)=>(
+          <button className="lw-row" key={"rd"+r.id} onClick={()=>onPick("reservations",r)}>
+            <span className="a" style={{color:"var(--wine)"}}>{money(Number(r.cost||0)-Number(r.deposit||0))}</span>
+            <span className="b">{r.name} balance</span><span className="c">{r.status||""}</span>
+          </button>
+        ))}
+        {dues.map((c)=>(
+          <button className="lw-row" key={"cd"+c.id} onClick={()=>onPick("costs",c)}>
+            <span className="a" style={{color:"var(--wine)"}}>{money(c.estimate||c.actual)}</span>
+            <span className="b">{c.item}</span><span className="c">{c.status||""}</span>
+          </button>
+        ))}
+      </>)}
+      {tasks.length>0 && (<>
+        <h4>To do</h4>
+        {tasks.map((t)=>(
+          <button className="lw-row" key={t.id} onClick={()=>onPick("tasks",t)}>
+            <span className="a">{t.owner||""}</span>
+            <span className="b" style={t.done?{textDecoration:"line-through",color:"var(--ink2)"}:{}}>{t.title}</span>
+            <span className="c">{t.done ? (t.doneBy?t.doneBy+" did it":"done") : ""}</span>
+          </button>
+        ))}
+      </>)}
+      {ideas.length>0 && (<>
+        <h4>Still open</h4>
+        {ideas.map((i)=>(
+          <button className="lw-row" key={i.id} onClick={()=>onPick("ideas",i)}>
+            <span className="a">{i.status||""}</span><span className="b">{i.title}</span><span className="c">{i.category||""}</span>
+          </button>
+        ))}
+      </>)}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ money */
+function Money({db,money,open}) {
+  const lines = useMemo(()=>{
+    const fromRes = db.reservations.map((r)=>({
+      id:r.id, coll:"reservations", item:r.name, category:r.kind||"Reservation",
+      estimate:Number(r.cost||0), actual: r.status==="Paid" ? Number(r.cost||0) : Number(r.deposit||0),
+      status: r.status==="Paid" ? "Paid in full" : r.deposit ? "Deposit paid" : "Planned",
+      due:r.due, tie: db.events.filter((e)=>e.resId===r.id).map((e)=>e.title).join(", "),
+    }));
+    const fromCosts = db.costs.map((c)=>{
+      const e = byId(db.events,c.eventId);
+      return {
+        id:c.id, coll:"costs", item:c.item, category:c.category||"Other",
+        estimate:Number(c.estimate||0), actual:Number(c.actual||0),
+        status:c.status||"Planned", due:c.due, tie: e ? e.title : c.paidBy ? "Paid by "+c.paidBy : "",
+      };
+    });
+    return [...fromRes,...fromCosts];
+  },[db]);
+
+  const est = lines.reduce((s,l)=>s+l.estimate,0);
+  const paid = lines.reduce((s,l)=>s+l.actual,0);
+  const heads = db.people.filter((p)=>p.rsvp==="Yes").length;
+  const cats = useMemo(()=>{
+    const m = {};
+    lines.forEach((l)=>{ m[l.category] = m[l.category]||{e:0,a:0}; m[l.category].e += l.estimate; m[l.category].a += l.actual; });
+    return Object.entries(m).sort((a,b)=>b[1].e-a[1].e);
+  },[lines]);
+
+  return (
+    <>
+      <div className="lw-bar">
+        <button className="lw-btn" onClick={()=>open("costs",null)}>Add cost</button>
+        <span className="lw-status" style={{marginLeft:"auto"}}>Reservation costs flow in automatically</span>
+      </div>
+      <div className="lw-cards">
+        <div className="lw-card"><div className="k">Committed</div><div className="v">{money(est)}</div></div>
+        <div className="lw-card"><div className="k">Paid so far</div><div className="v">{money(paid)}</div></div>
+        <div className="lw-card"><div className="k">Still owed</div><div className="v" style={{color:"var(--wine)"}}>{money(Math.max(0,est-paid))}</div></div>
+        <div className="lw-card"><div className="k">Per head</div><div className="v">{heads?money(est/heads):"\u2014"}</div></div>
+      </div>
+      {cats.length>0 && (
+        <div style={{marginBottom:18}}>
+          {cats.map(([c,v])=>(
+            <div className="lw-cat" key={c}>
+              <div className="r"><span>{c}</span><span>{money(v.a)} of {money(v.e)}</span></div>
+              <div className="lw-track"><div className="lw-fill" style={{width:(v.e?Math.min(100,(v.a/v.e)*100):0)+"%"}} /></div>
+            </div>
+          ))}
+        </div>
+      )}
+      {lines.length===0 ? (
+        <Empty label="No money tracked yet. Reservations show up here on their own once they have a cost." action="Add a cost line" onClick={()=>open("costs",null)} />
+      ) : (
+        <div className="lw-tablewrap">
+          <table className="lw-table">
+            <thead><tr><th>Item</th><th>Category</th><th>Status</th><th>Due</th><th className="num">Estimate</th><th className="num">Paid</th></tr></thead>
+            <tbody>
+              {lines.slice().sort((a,b)=>b.estimate-a.estimate).map((l)=>(
+                <tr key={l.coll+l.id} style={{cursor:"pointer"}}
+                  onClick={()=>open(l.coll, byId(l.coll==="costs"?db.costs:db.reservations, l.id))}>
+                  <td><div className="lw-name">{l.item}</div>{l.tie && <div className="lw-note">{l.tie}</div>}</td>
+                  <td>{l.category}</td>
+                  <td><Pill v={l.status} /></td>
+                  <td className="mono" style={l.due?{color:"var(--wine)"}:{}}>{pretty(l.due)}</td>
+                  <td className="num">{l.estimate?money(l.estimate):""}</td>
+                  <td className="num">{l.actual?money(l.actual):""}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+</script>
+</body>
+</html>
