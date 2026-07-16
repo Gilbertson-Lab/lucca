@@ -5,14 +5,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Lucca 2027</title>
 <link rel="icon" href="data:," />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600&family=Karla:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
 :root{
-  --paper:#E9EDE4; --card:#F8F9F5; --ink:#182019; --ink2:#59665B;
-  --line:#C9D2C4; --line2:#DDE3D8;
-  --cypress:#2F5E43; --brass:#9A7529; --wine:#7B2D45; --slate:#3C5A6E;
-  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Book Antiqua",Georgia,serif;
-  --sans:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  /* majolica: cobalt and marigold on porcelain */
+  --paper:#E6EDF2; --card:#FAFCFD; --ink:#152340; --ink2:#5A6B85;
+  --line:#BDCEDC; --line2:#D9E4EC;
+  --cypress:#2B4EA2;   /* lapis, the primary */
+  --brass:#DD9520;     /* marigold */
+  --wine:#C0396B;      /* raspberry */
+  --slate:#4E8C8A;     /* verdigris */
+  --olive:#5D8A3E;
+  --serif:"Fraunces","Iowan Old Style",Palatino,Georgia,serif;
+  --sans:"Karla",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"Space Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box;}
 body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--sans);font-size:14px;-webkit-font-smoothing:antialiased;}
@@ -21,10 +29,11 @@ a{color:var(--cypress);}
 .lw-shell{max-width:1180px;margin:0 auto;padding:20px 18px 80px;}
 
 .lw-top{display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:12px;}
-.lw-mast{font-family:var(--serif);font-size:34px;line-height:1;letter-spacing:-.01em;margin:0;font-weight:400;}
+.lw-mast{font-family:var(--serif);font-size:38px;line-height:.95;letter-spacing:-.02em;margin:0;
+  font-weight:600;font-variation-settings:"opsz" 144,"SOFT" 30,"WONK" 1;color:var(--cypress);}
 .lw-sub{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);margin-top:6px;}
 .lw-count{margin-left:auto;text-align:right;font-family:var(--mono);font-size:11px;color:var(--ink2);letter-spacing:.08em;text-transform:uppercase;}
-.lw-count b{display:block;font-family:var(--serif);font-size:28px;color:var(--cypress);letter-spacing:normal;text-transform:none;font-weight:400;}
+.lw-count b{display:block;font-family:var(--serif);font-size:30px;color:var(--wine);letter-spacing:normal;text-transform:none;font-weight:600;font-variation-settings:"opsz" 144;}
 
 .lw-tabs{display:flex;gap:2px;flex-wrap:wrap;margin:14px 0 18px;}
 .lw-tab{background:none;border:0;padding:8px 14px;border-radius:2px;color:var(--ink2);font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;}
@@ -45,12 +54,12 @@ a{color:var(--cypress);}
 
 .lw-week{display:grid;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:2px;overflow:hidden;}
 .lw-day{background:var(--card);min-height:210px;display:flex;flex-direction:column;}
-.lw-day.wed{background:#F1F5EC;}
+.lw-day.wed{background:#FFF6E4;box-shadow:inset 0 3px 0 var(--brass);}
 .lw-dayhead{display:flex;align-items:baseline;gap:6px;padding:8px 9px 6px;border-bottom:1px solid var(--line2);}
 .lw-daybtn{background:none;border:0;padding:0;display:flex;align-items:baseline;gap:6px;color:inherit;}
 .lw-daybtn:hover .lw-dnum{color:var(--cypress);}
 .lw-dow{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);}
-.lw-dnum{font-family:var(--serif);font-size:22px;line-height:1;}
+.lw-dnum{font-family:var(--serif);font-size:24px;line-height:1;font-weight:600;font-variation-settings:"opsz" 144,"SOFT" 40;}
 .lw-add{margin-left:auto;background:none;border:0;color:var(--ink2);font-size:16px;line-height:1;padding:0 2px;}
 .lw-add:hover{color:var(--cypress);}
 .lw-daybody{padding:7px;display:flex;flex-direction:column;gap:5px;flex:1;}
@@ -73,7 +82,7 @@ a{color:var(--cypress);}
 .lw-ev.Ceremony{border-left-color:var(--wine);}
 .lw-ev.Meal{border-left-color:var(--brass);}
 .lw-ev.Travel{border-left-color:var(--slate);}
-.lw-ev.Activity{border-left-color:var(--cypress);}
+.lw-ev.Activity{border-left-color:var(--olive);}
 
 .lw-chip{width:100%;text-align:left;border-radius:2px;padding:4px 6px;font-size:11.5px;line-height:1.3;background:none;}
 .lw-chip.money{border:1px solid var(--wine);color:var(--wine);}
@@ -92,7 +101,7 @@ a{color:var(--cypress);}
 .lw-table th{text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);font-weight:400;padding:9px 10px;border-bottom:1px solid var(--line);white-space:nowrap;}
 .lw-table td{padding:9px 10px;border-bottom:1px solid var(--line2);vertical-align:top;}
 .lw-table tr:last-child td{border-bottom:0;}
-.lw-table tbody tr:hover{background:#F1F4EC;}
+.lw-table tbody tr:hover{background:#F0F6FA;}
 .lw-table td.num,.lw-table th.num{text-align:right;font-family:var(--mono);}
 .lw-table td.mono{font-family:var(--mono);font-size:12px;color:var(--ink2);white-space:nowrap;}
 .lw-name{font-weight:500;}
@@ -104,7 +113,7 @@ a{color:var(--cypress);}
 .lw-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-bottom:16px;}
 .lw-card{background:var(--card);border:1px solid var(--line);border-radius:2px;padding:12px 14px;}
 .lw-card .k{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);}
-.lw-card .v{font-family:var(--serif);font-size:26px;margin-top:4px;}
+.lw-card .v{font-family:var(--serif);font-size:28px;margin-top:4px;font-weight:600;font-variation-settings:"opsz" 144;}
 .lw-cat{margin-bottom:9px;}
 .lw-cat .r{display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px;}
 .lw-cat .r span:last-child{font-family:var(--mono);}
@@ -121,7 +130,7 @@ a{color:var(--cypress);}
 
 .lw-scrim{position:fixed;inset:0;background:rgba(24,32,25,.45);display:flex;align-items:flex-start;justify-content:center;padding:24px 14px;overflow-y:auto;z-index:50;}
 .lw-modal{background:var(--paper);border:1px solid var(--ink);border-radius:2px;width:100%;max-width:520px;padding:20px;}
-.lw-modal h2{font-family:var(--serif);font-size:22px;margin:0 0 14px;font-weight:400;}
+.lw-modal h2{font-family:var(--serif);font-size:24px;margin:0 0 14px;font-weight:600;font-variation-settings:"opsz" 144,"SOFT" 30;color:var(--cypress);}
 .lw-modal h2 small{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);margin-top:4px;}
 .lw-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
 .lw-lab{display:block;font-family:var(--mono);font-size:10px;letter-spacing:.11em;text-transform:uppercase;color:var(--ink2);margin-bottom:3px;}
@@ -159,7 +168,7 @@ textarea.lw-in{min-height:62px;resize:vertical;}
 /* to do */
 .lw-task{display:flex;gap:10px;align-items:flex-start;background:var(--card);border:1px solid var(--line);
   border-radius:2px;padding:9px 10px;margin-bottom:6px;}
-.lw-task.over{border-color:var(--cypress);border-style:dashed;background:#F1F5EC;}
+.lw-task.over{border-color:var(--cypress);border-style:dashed;background:#F0F6FA;}
 .lw-task.dragging{opacity:.35;}
 .lw-task.done{background:none;border-style:dotted;}
 .lw-grip{cursor:grab;color:var(--line);font-size:13px;line-height:1.3;user-select:none;flex:none;letter-spacing:-2px;}
@@ -184,8 +193,30 @@ textarea.lw-in{min-height:62px;resize:vertical;}
 .o-pat{color:var(--slate);} .o-claire{color:var(--brass);} .o-both{color:var(--cypress);}
 .lw-chip.task{border:1px solid var(--slate);color:var(--slate);}
 
+/* planned vs confirmed */
+.lw-ev.planned{border-style:dashed;background:none;}
+.lw-ev.planned .n{color:var(--ink2);}
+.lw-ev .meta .prov{color:var(--brass);}
+.lw-prov{font-family:var(--mono);font-size:10px;color:var(--brass);letter-spacing:.06em;}
+
+/* bulk pick */
+.lw-bulk{display:flex;gap:5px;align-items:center;margin-bottom:5px;}
+.lw-bulk button{background:none;border:1px solid var(--line);border-radius:9px;color:var(--ink2);
+  font-family:var(--mono);font-size:9px;letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;}
+.lw-bulk button:hover{border-color:var(--cypress);color:var(--cypress);}
+.lw-bulk .n{margin-left:auto;font-family:var(--mono);font-size:10px;color:var(--ink2);}
+
+/* costs inside the event editor */
+.lw-costline{display:flex;width:100%;gap:8px;background:none;border:0;border-bottom:1px solid var(--line2);
+  padding:5px 2px;color:inherit;text-align:left;font-size:12.5px;}
+.lw-costline:hover{color:var(--cypress);}
+.lw-costline .i{flex:1;}
+.lw-costline .v{font-family:var(--mono);font-size:11px;color:var(--ink2);}
+.lw-costtotal{display:flex;justify-content:space-between;padding:6px 2px 0;
+  font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);}
+
 .lw-gate{max-width:380px;margin:14vh auto;padding:26px;background:var(--card);border:1px solid var(--line);border-radius:2px;}
-.lw-gate h1{font-family:var(--serif);font-size:28px;margin:0 0 4px;font-weight:400;}
+.lw-gate h1{font-family:var(--serif);font-size:32px;margin:0 0 4px;font-weight:600;font-variation-settings:"opsz" 144,"SOFT" 30,"WONK" 1;color:var(--cypress);}
 .lw-gate p{color:var(--ink2);font-size:13px;line-height:1.6;}
 
 @media (max-width:720px){
@@ -200,10 +231,31 @@ textarea.lw-in{min-height:62px;resize:vertical;}
 <body>
 <div id="root"></div>
 
+<script>
+/* If anything below fails before React renders, say so on the page
+   instead of showing a blank screen. */
+window.__boot = function (title, detail) {
+  var r = document.getElementById("root");
+  if (!r || r.dataset.booted) return;
+  r.innerHTML =
+    '<div style="max-width:560px;margin:12vh auto;padding:24px;border:1px solid #7B2D45;' +
+    'border-radius:2px;background:#F8F9F5;font-family:ui-sans-serif,system-ui,sans-serif;color:#182019">' +
+    '<h2 style="margin:0 0 10px;font-family:Georgia,serif;font-weight:400;color:#7B2D45">' + title + '</h2>' +
+    '<div style="font-size:13.5px;line-height:1.6;color:#59665B">' + detail + '</div></div>';
+};
+window.addEventListener("error", function (e) {
+  window.__boot("The page did not start.",
+    "<p>" + (e.message || "Unknown error") + "</p>" +
+    "<p>If this mentions <code>supabase</code>, the library did not load. " +
+    "Check you are online, and that no ad blocker or network is blocking cdn.jsdelivr.net.</p>");
+});
+</script>
+
 <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
 <script src="https://unpkg.com/@babel/standalone@7/babel.min.js" crossorigin></script>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 
 <script type="text/babel" data-type="module">
 const { useState, useEffect, useMemo, useCallback, useRef } = React;
@@ -227,14 +279,24 @@ const CONFIG = {
 
 const CLOUD = Boolean(CONFIG.PROJECT_ID && CONFIG.PUBLISHABLE_KEY);
 const SUPABASE_URL = `https://${CONFIG.PROJECT_ID}.supabase.co`;
-const sb = CLOUD ? window.supabase.createClient(SUPABASE_URL, CONFIG.PUBLISHABLE_KEY) : null;
 
 if (CONFIG.PUBLISHABLE_KEY.startsWith("sb_secret_")) {
-  document.body.innerHTML = "<p style='padding:40px;font-family:sans-serif;color:#7B2D45'>"
-    + "That is a Secret key. It bypasses all your security rules and must never go in a web page. "
-    + "Use the Publishable key instead, the one starting sb_publishable_.</p>";
+  window.__boot("That is a Secret key.",
+    "<p>Secret keys bypass every security rule you set up and must never go in a web page.</p>" +
+    "<p>Use the <b>Publishable key</b> instead, the one starting <code>sb_publishable_</code>.</p>");
   throw new Error("secret key in client");
 }
+
+if (CLOUD && !(window.supabase && window.supabase.createClient)) {
+  window.__boot("The Supabase library did not load.",
+    "<p>Your keys are set correctly, so the planner is trying to connect. But the library it needs " +
+    "never arrived from the CDN.</p><p>Usual causes: you are offline, an ad blocker or privacy " +
+    "extension is blocking <code>cdn.jsdelivr.net</code>, or a work network is filtering it. " +
+    "Try another browser, or disable the blocker for this page.</p>");
+  throw new Error("supabase-js missing");
+}
+
+const sb = CLOUD ? window.supabase.createClient(SUPABASE_URL, CONFIG.PUBLISHABLE_KEY) : null;
 
 /* ------------------------------------------------------------------
    storage adapter: same two calls either way
@@ -277,10 +339,23 @@ const dnum = (s) => parse(s).getUTCDate();
 const pretty = (s) => (s ? `${dow(s)} ${dnum(s)} ${MON[parse(s).getUTCMonth()]}` : "");
 const daysBetween = (a,b) => Math.round((parse(b)-parse(a))/86400000);
 
+/* every quarter hour, 00:00 to 23:45 */
+const TIMES = (()=>{ const a=[]; for(let h=0;h<24;h++) for(let m=0;m<60;m+=15)
+  a.push(String(h).padStart(2,"0")+":"+String(m).padStart(2,"0")); return a; })();
+/* store 24h, show the way people speak */
+const t12 = (s) => {
+  if (!s) return "";
+  const [h,m] = s.split(":").map(Number);
+  const ap = h < 12 ? "am" : "pm";
+  const hh = h % 12 === 0 ? 12 : h % 12;
+  return m === 0 ? `${hh}${ap}` : `${hh}:${String(m).padStart(2,"0")}${ap}`;
+};
+
 /* ------------------------------------------------------------------ schema */
 const KINDS = ["Lodging","Venue","Dining","Transport","Vendor","Other"];
 const RES_STATUS = ["Idea","Held","Booked","Paid"];
 const EVENT_KIND = ["Ceremony","Meal","Travel","Activity","Prep","Other"];
+const EVENT_STATUS = ["Planned","Confirmed"];
 const RSVP = ["Invited","Yes","Maybe","No"];
 const IDEA_STATUS = ["Considering","Frontrunner","Decided","Passed"];
 const COST_STATUS = ["Planned","Deposit paid","Paid in full"];
@@ -313,8 +388,9 @@ const SCHEMA = {
   events: [
     { k:"title", l:"Title", t:"text", req:true },
     { k:"date", l:"Date", t:"date", req:true },
-    { k:"start", l:"Start", t:"time" },
-    { k:"end", l:"End", t:"time" },
+    { k:"start", l:"Start", t:"time15" },
+    { k:"end", l:"End", t:"time15" },
+    { k:"status", l:"Locked in?", t:"select", o:EVENT_STATUS },
     { k:"kind", l:"Type", t:"select", o:EVENT_KIND },
     { k:"resId", l:"Reservation", t:"ref", coll:"reservations", lk:"name" },
     { k:"location", l:"Where", t:"text", ph:"Leave blank to use the reservation" },
@@ -360,6 +436,7 @@ const DEFAULT_SETTINGS = {
 
 /* ------------------------------------------------------------------ helpers */
 const TONE = {
+  Confirmed:"p-green", Planned:"p-brass",
   Booked:"p-green", Paid:"p-green", Yes:"p-green", Decided:"p-green",
   "Paid in full":"p-green", Frontrunner:"p-green",
   Held:"p-brass", Maybe:"p-brass", "Deposit paid":"p-brass", Considering:"p-brass",
@@ -375,7 +452,7 @@ function Empty({label,action,onClick}) {
 }
 
 /* ------------------------------------------------------------------ modal */
-function Modal({title,sub,fields,value,db,links,onSave,onDelete,onClose,onJump,extra}) {
+function Modal({title,sub,fields,value,db,links,onSave,onDelete,onClose,onJump,extra,secondary}) {
   const [f,setF] = useState(value);
   const set = (k,v) => setF((p)=>({...p,[k]:v}));
   const missing = fields.filter((x)=>x.req && !String(f[x.k]||"").trim());
@@ -408,16 +485,32 @@ function Modal({title,sub,fields,value,db,links,onSave,onDelete,onClose,onJump,e
                 )}
                 {x.t==="refs" && (opts.length===0
                   ? <div className="lw-picker" style={{padding:10,fontSize:12,color:"var(--ink2)"}}>Add people first and they will show up here.</div>
-                  : <div className="lw-picker">
-                      {opts.map((o)=>(
-                        <label className="lw-pick" key={o.id}>
-                          <input type="checkbox" checked={(f[x.k]||[]).includes(o.id)} onChange={()=>toggle(x.k,o.id)} />
-                          <span>{o[x.lk]}</span>
-                          {o.rsvp && <span className="sub">{o.rsvp}</span>}
-                        </label>
-                      ))}
-                    </div>
+                  : <>
+                      <div className="lw-bulk">
+                        <button type="button" onClick={()=>set(x.k, opts.map((o)=>o.id))}>Everyone</button>
+                        <button type="button" onClick={()=>set(x.k, opts.filter((o)=>o.rsvp==="Yes").map((o)=>o.id))}>Everyone coming</button>
+                        <button type="button" onClick={()=>set(x.k, [])}>Nobody</button>
+                        <span className="n">{(f[x.k]||[]).length} of {opts.length}</span>
+                      </div>
+                      <div className="lw-picker">
+                        {opts.map((o)=>(
+                          <label className="lw-pick" key={o.id}>
+                            <input type="checkbox" checked={(f[x.k]||[]).includes(o.id)} onChange={()=>toggle(x.k,o.id)} />
+                            <span>{o[x.lk]}</span>
+                            {o.rsvp && <span className="sub">{o.rsvp}</span>}
+                          </label>
+                        ))}
+                      </div>
+                    </>
                 )}
+                {x.t==="time15" && (
+                  <select id={"f-"+x.k} className="lw-in" value={f[x.k]||""} onChange={(e)=>set(x.k,e.target.value)}>
+                    <option value="">Not set</option>
+                    {f[x.k] && !TIMES.includes(f[x.k]) && <option value={f[x.k]}>{t12(f[x.k])}</option>}
+                    {TIMES.map((t)=><option key={t} value={t}>{t12(t)}</option>)}
+                  </select>
+                )}
+
                 {x.t==="textarea" && (
                   <textarea id={"f-"+x.k} className="lw-in" value={f[x.k]||""} placeholder={x.ph||""} onChange={(e)=>set(x.k,e.target.value)} />
                 )}
@@ -442,6 +535,9 @@ function Modal({title,sub,fields,value,db,links,onSave,onDelete,onClose,onJump,e
         </div>
         <div className="lw-acts">
           <button className="lw-btn" disabled={missing.length>0} onClick={()=>onSave(f)}>Save</button>
+          {secondary && (
+            <button className="lw-btn ghost" disabled={missing.length>0} onClick={()=>secondary.run(f)}>{secondary.label}</button>
+          )}
           <button className="lw-btn ghost" onClick={onClose}>Cancel</button>
           {onDelete && <button className="lw-btn danger" style={{marginLeft:"auto"}} onClick={onDelete}>Delete</button>}
         </div>
@@ -555,9 +651,11 @@ function App() {
 
   const commit = async (row)=>{
     const {coll,isNew} = edit;
-    const rows = isNew ? [...db[coll],{...row,id:uid()}] : db[coll].map((r)=>(r.id===row.id?row:r));
+    const saved = isNew ? {...row,id:uid()} : row;
+    const rows = isNew ? [...db[coll],saved] : db[coll].map((r)=>(r.id===row.id?row:r));
     setEdit(null);
     await write(coll,rows);
+    return saved;
   };
 
   const remove = async ()=>{
@@ -729,17 +827,20 @@ function App() {
                     {evs.map((e)=>{
                       const r = byId(db.reservations,e.resId);
                       const n = (e.guests||[]).length;
+                      const cost = db.costs.filter((c)=>c.eventId===e.id)
+                        .reduce((t,c)=>t+Number(c.actual||c.estimate||0),0);
+                      const planned = (e.status||"Planned")!=="Confirmed";
                       return (
-                        <button key={e.id} className={"lw-ev "+(e.kind||"")} onClick={()=>open("events",e)}>
-                          {e.start && <div className="t">{e.start}{e.end?"\u2013"+e.end:""}</div>}
+                        <button key={e.id} className={"lw-ev "+(e.kind||"")+(planned?" planned":" confirmed")}
+                          onClick={()=>open("events",e)}>
+                          {e.start && <div className="t">{t12(e.start)}{e.end?"\u2013"+t12(e.end):""}</div>}
                           <div className="n">{e.title}</div>
                           {(e.location||r) && <div className="w">{e.location||r.name}</div>}
-                          {(n>0||r) && (
-                            <div className="meta">
-                              {n>0 && <span>{n} {n===1?"guest":"guests"}</span>}
-                              {r && <span>{r.status||"linked"}</span>}
-                            </div>
-                          )}
+                          <div className="meta">
+                            {planned && <span className="prov">planned</span>}
+                            {n>0 && <span>{n===db.people.length&&n>0?"everyone":n+(n===1?" guest":" guests")}</span>}
+                            {cost>0 && <span>{money(cost)}</span>}
+                          </div>
                         </button>
                       );
                     })}
@@ -917,6 +1018,11 @@ function App() {
           fields={SCHEMA[edit.coll]} value={edit.item} db={db}
           links={backlinks(edit.coll,edit.item)}
           onJump={(coll,item)=>open(coll,item)}
+          extra={edit.coll==="events" ? <EventCosts db={db} event={edit.item} money={money} onPick={(c)=>open("costs",c)} /> : null}
+          secondary={edit.coll==="events" ? {
+            label: "Save and add a cost",
+            run: async (f)=>{ const saved = await commit(f); open("costs",{ eventId: saved.id, category: saved.kind || "" }); },
+          } : null}
           onSave={commit} onDelete={edit.isNew?null:remove} onClose={()=>setEdit(null)}
         />
       )}
@@ -956,6 +1062,40 @@ function App() {
           onClose={()=>setShowSettings(false)}
         />
       )}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ costs attached to one event */
+function EventCosts({db,event,money,onPick}) {
+  if (!event || !event.id) {
+    return (
+      <div className="lw-links">
+        <div className="h">What it costs</div>
+        <p className="lw-note" style={{marginTop:0}}>Save the event first, then you can hang costs off it.</p>
+      </div>
+    );
+  }
+  const rows = db.costs.filter((c)=>c.eventId===event.id);
+  const est = rows.reduce((s,c)=>s+Number(c.estimate||0),0);
+  const act = rows.reduce((s,c)=>s+Number(c.actual||0),0);
+  return (
+    <div className="lw-links">
+      <div className="h">What it costs</div>
+      {rows.length===0
+        ? <p className="lw-note" style={{marginTop:0}}>Nothing costed yet. Use Save and add a cost below.</p>
+        : (<>
+            {rows.map((c)=>(
+              <button key={c.id} className="lw-costline" onClick={()=>onPick(c)}>
+                <span className="i">{c.item}</span>
+                <span className="v">{c.actual ? money(c.actual) + " paid" : money(c.estimate) + " est"}</span>
+              </button>
+            ))}
+            <div className="lw-costtotal">
+              <span>{rows.length} {rows.length===1?"line":"lines"}</span>
+              <span>{money(act)} of {money(est)}</span>
+            </div>
+          </>)}
     </div>
   );
 }
@@ -1136,8 +1276,8 @@ function DaySheet({d,db,money,onPick}) {
           const names = (e.guests||[]).map((g)=>byId(db.people,g)).filter(Boolean).map((p)=>p.name);
           return (
             <button className="lw-row" key={e.id} onClick={()=>onPick("events",e)}>
-              <span className="a">{e.start||"\u2014"}</span>
-              <span className="b">{e.title}
+              <span className="a">{t12(e.start)||"\u2014"}</span>
+              <span className="b">{e.title}{(e.status||"Planned")!=="Confirmed" && <span className="lw-prov"> planned</span>}
                 {(e.location||r) && <div style={{color:"var(--ink2)",fontSize:12}}>{e.location||r.name}</div>}
                 {names.length>0 && <div style={{color:"var(--ink2)",fontSize:12}}>{names.slice(0,6).join(", ")}{names.length>6?` +${names.length-6}`:""}</div>}
               </span>
@@ -1284,7 +1424,9 @@ function Money({db,money,open}) {
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+const rootEl = document.getElementById("root");
+rootEl.dataset.booted = "1";
+ReactDOM.createRoot(rootEl).render(<App />);
 </script>
 </body>
 </html>
