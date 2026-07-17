@@ -215,6 +215,18 @@ textarea.lw-in{min-height:62px;resize:vertical;}
 .lw-costtotal{display:flex;justify-content:space-between;padding:6px 2px 0;
   font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2);}
 
+/* sortable headers + column filters */
+.lw-th{background:none;border:0;padding:0;font:inherit;color:inherit;letter-spacing:inherit;
+  text-transform:inherit;display:flex;align-items:center;gap:4px;}
+.lw-th:hover{color:var(--ink);}
+.lw-th .ar{font-size:7px;opacity:.35;}
+.lw-th.on{color:var(--cypress);}
+.lw-th.on .ar{opacity:1;}
+.lw-filters td{padding:5px 8px 7px;background:var(--card);border-bottom:1px solid var(--line);}
+.lw-fsel{width:100%;min-width:74px;padding:3px 4px;border:1px solid var(--line);border-radius:2px;
+  background:var(--paper);color:var(--ink2);font-family:var(--mono);font-size:10px;}
+.lw-fsel:hover{border-color:var(--cypress);}
+
 .lw-gate{max-width:380px;margin:14vh auto;padding:26px;background:var(--card);border:1px solid var(--line);border-radius:2px;}
 .lw-gate h1{font-family:var(--serif);font-size:32px;margin:0 0 4px;font-weight:600;font-variation-settings:"opsz" 144,"SOFT" 30,"WONK" 1;color:var(--cypress);}
 .lw-gate p{color:var(--ink2);font-size:13px;line-height:1.6;}
@@ -875,43 +887,7 @@ function App() {
         </>
       )}
 
-      {tab==="people" && (
-        <>
-          <div className="lw-bar">
-            <button className="lw-btn" onClick={()=>open("people",null)}>Add person</button>
-            <input className="lw-field lw-search" placeholder="Search people" value={q} onChange={(e)=>setQ(e.target.value)} />
-            <span className="lw-status" style={{marginLeft:"auto"}}>
-              {db.people.filter((p)=>p.rsvp==="Yes").length} yes / {db.people.length} invited
-            </span>
-          </div>
-          {db.people.length===0 ? (
-            <Empty label="No one on the list yet." action="Add the first person" onClick={()=>open("people",null)} />
-          ) : (
-            <div className="lw-tablewrap">
-              <table className="lw-table">
-                <thead><tr><th>Name</th><th>Group</th><th>RSVP</th><th>Arrives</th><th>Departs</th><th>Staying at</th><th>Events</th></tr></thead>
-                <tbody>
-                  {filt(db.people,["name","group","notes","contact"]).slice().sort((a,b)=>(a.name||"").localeCompare(b.name||"")).map((p)=>{
-                    const r = byId(db.reservations,p.resId);
-                    const evs = db.events.filter((e)=>(e.guests||[]).includes(p.id));
-                    return (
-                      <tr key={p.id} onClick={()=>open("people",p)} style={{cursor:"pointer"}}>
-                        <td><div className="lw-name">{p.name}</div>{p.contact && <div className="lw-note">{p.contact}</div>}</td>
-                        <td>{p.group||""}{p.side && p.side!=="Ours" ? <div className="lw-note">{p.side}</div> : null}</td>
-                        <td><Pill v={p.rsvp} /></td>
-                        <td className="mono">{pretty(p.arrival)}</td>
-                        <td className="mono">{pretty(p.departure)}</td>
-                        <td>{r?r.name:""}{p.notes && <div className="lw-note">{p.notes}</div>}</td>
-                        <td className="mono">{evs.length||""}</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </>
-      )}
+      {tab==="people" && <People db={db} open={open} q={q} setQ={setQ} />}
 
       {tab==="reservations" && (
         <>
@@ -1063,6 +1039,144 @@ function App() {
         />
       )}
     </div>
+  );
+}
+
+/* ------------------------------------------------------------------ people */
+const RSVP_ORDER = { Yes:0, Maybe:1, Invited:2, No:3 };
+
+function People({db,open,q,setQ}) {
+  const [sortKey,setSortKey] = useState("name");
+  const [dir,setDir] = useState(1);
+  const [pf,setPf] = useState({ group:"", side:"", rsvp:"", arrival:"", departure:"", resId:"" });
+
+  const resName = (p) => { const r = byId(db.reservations,p.resId); return r ? r.name : ""; };
+  const evCount = (p) => db.events.filter((e)=>(e.guests||[]).includes(p.id)).length;
+
+  const val = (p,k) => {
+    if (k==="name")      return (p.name||"").toLowerCase();
+    if (k==="group")     return (p.group||"").toLowerCase();
+    if (k==="rsvp")      return p.rsvp ? RSVP_ORDER[p.rsvp] : "";
+    if (k==="arrival")   return p.arrival || "";
+    if (k==="departure") return p.departure || "";
+    if (k==="lodging")   return resName(p).toLowerCase();
+    if (k==="events")    return evCount(p);
+    return "";
+  };
+
+  const cmp = (a,b) => {
+    const av = val(a,sortKey), bv = val(b,sortKey);
+    const ae = av==="" || av===null || av===undefined;
+    const be = bv==="" || bv===null || bv===undefined;
+    if (ae && be) return (a.name||"").localeCompare(b.name||"");
+    if (ae) return 1;   /* blanks always sink, whichever way you sort */
+    if (be) return -1;
+    if (typeof av === "number" && typeof bv === "number") return (av-bv)*dir;
+    const c = String(av).localeCompare(String(bv));
+    return c !== 0 ? c*dir : (a.name||"").localeCompare(b.name||"");
+  };
+
+  const hit = (p) => {
+    const s = q.trim().toLowerCase();
+    if (!s) return true;
+    return ["name","group","contact","notes"].some((k)=>String(p[k]||"").toLowerCase().includes(s));
+  };
+
+  const rows = db.people.filter((p)=>
+    (!pf.group     || (p.group||"")     === pf.group) &&
+    (!pf.side      || (p.side||"")      === pf.side) &&
+    (!pf.rsvp      || (p.rsvp||"")      === pf.rsvp) &&
+    (!pf.arrival   || (p.arrival||"")   === pf.arrival) &&
+    (!pf.departure || (p.departure||"") === pf.departure) &&
+    (!pf.resId     || (pf.resId==="__none" ? !p.resId : p.resId===pf.resId)) &&
+    hit(p)
+  ).slice().sort(cmp);
+
+  const uniq = (k) => [...new Set(db.people.map((p)=>p[k]).filter(Boolean))].sort();
+  const lodgings = db.reservations.filter((r)=>db.people.some((p)=>p.resId===r.id));
+  const active = Object.values(pf).some(Boolean) || q.trim();
+
+  const head = (k,label,cls) => (
+    <th className={cls||""}>
+      <button className={"lw-th"+(sortKey===k?" on":"")}
+        onClick={()=>{ if (sortKey===k) setDir(-dir); else { setSortKey(k); setDir(1); } }}>
+        {label}<span className="ar">{sortKey===k ? (dir===1?"\u25B2":"\u25BC") : "\u25B4"}</span>
+      </button>
+    </th>
+  );
+
+  const sel = (k,opts,any) => (
+    <select className="lw-fsel" value={pf[k]} onChange={(e)=>setPf({...pf,[k]:e.target.value})}>
+      <option value="">{any}</option>
+      {opts.map((o)=>(
+        <option key={o.v!==undefined?o.v:o} value={o.v!==undefined?o.v:o}>{o.l!==undefined?o.l:o}</option>
+      ))}
+    </select>
+  );
+
+  const yes = db.people.filter((p)=>p.rsvp==="Yes").length;
+
+  return (
+    <>
+      <div className="lw-bar">
+        <button className="lw-btn" onClick={()=>open("people",null)}>Add person</button>
+        <input className="lw-field lw-search" placeholder="Search people" value={q} onChange={(e)=>setQ(e.target.value)} />
+        {active && <button className="lw-btn ghost" onClick={()=>{setPf({group:"",side:"",rsvp:"",arrival:"",departure:"",resId:""});setQ("");}}>Clear filters</button>}
+        <span className="lw-status" style={{marginLeft:"auto"}}>
+          {active ? `${rows.length} of ${db.people.length} shown` : `${yes} yes / ${db.people.length} invited`}
+        </span>
+      </div>
+
+      {db.people.length===0 ? (
+        <Empty label="No one on the list yet." action="Add the first person" onClick={()=>open("people",null)} />
+      ) : (
+        <div className="lw-tablewrap">
+          <table className="lw-table">
+            <thead>
+              <tr>
+                {head("name","Name")}
+                {head("group","Group")}
+                {head("rsvp","RSVP")}
+                {head("arrival","Arrives")}
+                {head("departure","Departs")}
+                {head("lodging","Staying at")}
+                {head("events","Events","num")}
+              </tr>
+              <tr className="lw-filters">
+                <td>{sel("side",["Ours","Pat","Claire"],"Any side")}</td>
+                <td>{sel("group",uniq("group"),"Any group")}</td>
+                <td>{sel("rsvp",RSVP,"Any reply")}</td>
+                <td>{sel("arrival",uniq("arrival").map((d)=>({v:d,l:pretty(d)})),"Any day")}</td>
+                <td>{sel("departure",uniq("departure").map((d)=>({v:d,l:pretty(d)})),"Any day")}</td>
+                <td>{sel("resId",[{v:"__none",l:"Nowhere yet"}].concat(lodgings.map((r)=>({v:r.id,l:r.name}))),"Anywhere")}</td>
+                <td />
+              </tr>
+            </thead>
+            <tbody>
+              {rows.length===0 ? (
+                <tr><td colSpan={7} style={{textAlign:"center",color:"var(--ink2)",padding:"24px 10px"}}>
+                  Nobody matches that.
+                </td></tr>
+              ) : rows.map((p)=>{
+                const r = byId(db.reservations,p.resId);
+                const n = evCount(p);
+                return (
+                  <tr key={p.id} onClick={()=>open("people",p)} style={{cursor:"pointer"}}>
+                    <td><div className="lw-name">{p.name}</div>{p.contact && <div className="lw-note">{p.contact}</div>}</td>
+                    <td>{p.group||""}{p.side && p.side!=="Ours" ? <div className="lw-note">{p.side}</div> : null}</td>
+                    <td><Pill v={p.rsvp} /></td>
+                    <td className="mono">{pretty(p.arrival)}</td>
+                    <td className="mono">{pretty(p.departure)}</td>
+                    <td>{r?r.name:""}{p.notes && <div className="lw-note">{p.notes}</div>}</td>
+                    <td className="num">{n||""}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </>
   );
 }
 
