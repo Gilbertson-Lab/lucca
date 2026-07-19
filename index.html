@@ -120,6 +120,13 @@ a{color:var(--cypress);}
 .lw-track{height:6px;background:var(--line2);border-radius:3px;overflow:hidden;}
 .lw-fill{height:100%;background:var(--cypress);}
 
+.lw-split{display:flex;flex-wrap:wrap;gap:14px;align-items:baseline;padding:10px 14px;margin-bottom:16px;
+  background:var(--card);border:1px solid var(--line);border-radius:2px;}
+.lw-split .lbl{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);}
+.lw-split .who{font-size:13px;color:var(--ink);}
+.lw-split .who b{font-family:var(--mono);color:var(--cypress);font-weight:700;}
+.lw-split .who.un b{color:var(--wine);}
+
 .lw-board{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;}
 .lw-col h3{font-family:var(--mono);font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);font-weight:400;margin:0 0 8px;padding-bottom:6px;border-bottom:1px solid var(--line);}
 .lw-idea{width:100%;text-align:left;background:var(--card);border:1px solid var(--line);border-radius:2px;padding:10px;margin-bottom:8px;}
@@ -384,6 +391,7 @@ const EVENT_STATUS = ["Planned","Confirmed"];
 const RSVP = ["Invited","Yes","Maybe","No"];
 const IDEA_STATUS = ["Considering","Frontrunner","Decided","Passed"];
 const COST_STATUS = ["Planned","Deposit paid","Paid in full"];
+const PAYERS = ["Pat","Claire","Other"];
 
 const SCHEMA = {
   people: [
@@ -406,6 +414,7 @@ const SCHEMA = {
     { k:"end", l:"Ends", t:"date" },
     { k:"cost", l:"Total cost", t:"number" },
     { k:"deposit", l:"Deposit paid", t:"number" },
+    { k:"paidBy", l:"Paid by", t:"select", o:PAYERS },
     { k:"due", l:"Balance due", t:"date" },
     { k:"confirmation", l:"Confirmation", t:"text" },
     { k:"link", l:"Link", t:"url" },
@@ -431,7 +440,7 @@ const SCHEMA = {
     { k:"status", l:"Status", t:"select", o:COST_STATUS },
     { k:"due", l:"Due", t:"date" },
     { k:"eventId", l:"For which event", t:"ref", coll:"events", lk:"title" },
-    { k:"paidBy", l:"Paid by", t:"text" },
+    { k:"paidBy", l:"Paid by", t:"select", o:PAYERS },
     { k:"notes", l:"Notes", t:"textarea" },
   ],
   ideas: [
