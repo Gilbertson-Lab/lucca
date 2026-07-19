@@ -466,7 +466,7 @@ const NOUN = { people:"person", reservations:"reservation", events:"event", cost
 
 const DEFAULT_SETTINGS = {
   title:"Lucca 2027", venue:"Villa Barsocchini",
-  weddingDate:"2027-08-28", weekStart:"2027-08-23", days:7, currency:"EUR",
+  weddingDate:"2027-08-28", weekStart:"2027-08-23", days:7, currency:"USD",
 };
 
 /* ------------------------------------------------------------------ helpers */
@@ -1044,7 +1044,7 @@ function App() {
             { k:"weddingDate", l:"Wedding day", t:"date", req:true },
             { k:"weekStart", l:"Week starts", t:"date", req:true },
             { k:"days", l:"Days shown", t:"number" },
-            { k:"currency", l:"Currency", t:"select", o:["EUR","USD","GBP"] },
+            { k:"currency", l:"Currency", t:"select", o:["USD","EUR","GBP"] },
           ]}
           value={settings} db={db}
           extra={
@@ -1511,7 +1511,7 @@ function Money({db,money,open}) {
       id:r.id, coll:"reservations", item:r.name, category:r.kind||"Reservation",
       estimate:Number(r.cost||0), actual: r.status==="Paid" ? Number(r.cost||0) : Number(r.deposit||0),
       status: r.status==="Paid" ? "Paid in full" : r.deposit ? "Deposit paid" : "Planned",
-      due:r.due, tie: db.events.filter((e)=>e.resId===r.id).map((e)=>e.title).join(", "),
+      due:r.due, tie: [db.events.filter((e)=>e.resId===r.id).map((e)=>e.title).join(", "), r.paidBy ? "Paid by "+r.paidBy : ""].filter(Boolean).join(" \u00B7 "),
     }));
     const fromCosts = db.costs.map((c)=>{
       const e = byId(db.events,c.eventId);
